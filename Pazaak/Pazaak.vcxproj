@@ -133,7 +133,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Card.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainCard.cpp" />
+    <ClCompile Include="SideCard.cpp" />
+    <ClCompile Include="SwitchCard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Card.hpp" />
+    <ClInclude Include="MainCard.hpp" />
+    <ClInclude Include="SideCard.hpp" />
+    <ClInclude Include="SwitchCard.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
