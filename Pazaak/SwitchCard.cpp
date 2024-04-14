@@ -35,3 +35,20 @@ void SwitchCard::displayCard(RenderWindow& window) {
 	// need something that draws a textbox indicating the SwitchCard's value
 	// need something that draws a toggle +/- that indicates whether the value is positive or negative
 }
+
+
+/********************************************************************************************************
+* Function: modifyCard()																				*
+* Date Created: 4/13/2024																				*
+* Date Last Modified: 4/13/2024																			*
+* Programmer: Colin Van Dyke																			*
+* Description: Multiplies the mValue data member of a SwitchCard by the mModifier data member.			*
+* Input parameters: void																				*
+* Returns: void																							*
+* Preconditions: None																					*
+* Postconditions: None																					*
+********************************************************************************************************/
+
+void SwitchCard::modifyCard(void) {
+	mValue *= mModifier;
+}
