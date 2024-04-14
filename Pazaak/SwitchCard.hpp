@@ -13,6 +13,7 @@ public:
 
 	// METHODS
 	void displayCard(RenderWindow& window) override;
+	void modifyCard(void);
 
 private:
 	int mModifier;
