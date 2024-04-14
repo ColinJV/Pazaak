@@ -10,3 +10,5 @@ This is a Pazaak game with SFML graphics that was made for a Computer Science 12
 2. Clone this repository
 All required assets are included in the repository.
 
+## Legal
+Pazaak and all sound effects and music is the property of Lucasfilm Games and BioWare, a subsidiary of Electronic Arts. This project is not monetized and is a work of fan art. No copyright infringement is intended, and commercial use of these assets without the permission of the copyright owner is prohibited.
