@@ -3,6 +3,6 @@
 
 int main()
 {
-    // fuckshit
+
     return 0;
 }
