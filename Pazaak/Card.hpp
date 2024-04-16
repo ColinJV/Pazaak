@@ -30,7 +30,7 @@ public:
 	// This will draw the Card with an overridden function in the inherited class
 	// I understand this is dumb and completely unnecessary, but it was the
 	// only way I could think of to implement polymorphism into the game
-	virtual void displayCard(RenderWindow& window) = 0;
+	virtual void drawCardInWindow(RenderWindow& window) = 0;
 
 protected:
 	int mValue;

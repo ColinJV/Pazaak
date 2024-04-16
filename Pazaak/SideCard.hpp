@@ -17,7 +17,7 @@ public:
 	~SideCard();
 
 	// METHODS
-	void displayCard(RenderWindow& window) override;
+	void drawCardInWindow(RenderWindow& window) override;
 
 };
 
