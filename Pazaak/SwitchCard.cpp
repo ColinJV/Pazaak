@@ -18,7 +18,7 @@ SwitchCard::~SwitchCard() {
 
 
 /********************************************************************************************************
-* Function: displayCard()																				*
+* Function: drawCardInWindow()																			*
 * Date Created: 4/13/2024																				*
 * Date Last Modified: 4/13/2024																			*
 * Programmer: Colin Van Dyke																			*
@@ -30,7 +30,7 @@ SwitchCard::~SwitchCard() {
 * Postconditions: None																					*
 ********************************************************************************************************/
 
-void SwitchCard::displayCard(RenderWindow& window) {
+void SwitchCard::drawCardInWindow(RenderWindow& window) {
 	window.draw(this->mCard);
 	// need something that draws a textbox indicating the SwitchCard's value
 	// need something that draws a toggle +/- that indicates whether the value is positive or negative
