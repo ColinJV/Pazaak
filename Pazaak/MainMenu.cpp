@@ -240,8 +240,8 @@ int MainMenu::getUserSelection() {
 /********************************************************************************************************
 * Function: runMainMenu()																				*
 * Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
-* Programmer: Colin Van Dyke																			*
+* Date Last Modified: 4/16/2024																			*
+* Programmer: Colin Van Dyke, Nick McBrayer																			*
 * Description: Main logic function for MainMenu object. Draws and displays the MainMenu to the window	*
 * and conducts event polling. Highlights various menu options based on userSelection value. Loops until *
 * the window closes or until the player chooses to play the game, at which point a boolean flag is set	*
@@ -255,9 +255,30 @@ int MainMenu::getUserSelection() {
 ********************************************************************************************************/
 bool MainMenu::runMainMenu(RenderWindow& window) {
 	bool playGame = false;
+	sf::Music music;
+	if (!music.openFromFile("audio/mus_theme_cult.wav")) {
+		cout << "Main Theme Error!" << endl;
+	}
+	music.setVolume(20);
+	music.setLoop(true);
+	music.play();
+	sf::SoundBuffer buffer1, buffer2;
+	if (!buffer1.loadFromFile("audio/kotor_menu_sfx2.wav")) {
+		cout << "Sound1 Error!" << endl;
+	}
+	if (!buffer2.loadFromFile("audio/kotor_menu_sfx.wav")) {
+		cout << "Sound2 Error!" << endl;
+	}
+	sf::Sound sound1, sound2;
+	sound1.setBuffer(buffer1);
+	sound1.setVolume(20);
+	sound2.setBuffer(buffer2);
+	sound2.setVolume(20);
 	while (window.isOpen() && playGame == false) {
 		Event event;
-
+		
+		
+		
 		if (window.pollEvent(event)) {
 			if (event.type == Event::Closed) {
 				window.close();
@@ -266,11 +287,14 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 				switch (event.key.code) {
 				case Keyboard::Up:
 					this->moveUp();
+					sound1.play();
 					break;
 				case Keyboard::Down:
 					this->moveDown();
+					sound1.play();
 					break;
 				case Keyboard::Enter:
+					sound2.play();
 					switch (this->getUserSelection()) {
 					case 0:
 						playGame = true;
