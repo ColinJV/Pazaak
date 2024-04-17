@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 #define NUMBER_OF_OPTIONS 3
 
@@ -41,11 +42,14 @@ public:
 	void moveUp();
 	void moveDown();
 	void drawRules(RenderWindow& window) const;
+	void userHoversPlayGame();
+	void userHoversRules();
+	void userHoversQuit();
 
 private:
 	int userSelection;
 	Font fontType;
-	Text mainMenu[3];
+	Text* mainMenuText;
 	RectangleShape backgroundImage;
 	Texture backgroundTexture;
 };
