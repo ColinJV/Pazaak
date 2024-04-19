@@ -132,7 +132,7 @@ int Match::playMatch(RenderWindow& window) {
 
 		this->displayMatch(window);
 	}
-
+	return(winnerID);
 }
 
 
@@ -232,7 +232,7 @@ void Match::dealMainCard(Card*& newCardSlot, int& player) {
 * Postconditions: None																					*
 ********************************************************************************************************/
 void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands) {
-	bool sideCardPlayed = false;
+	bool sideCardPlayed = false, alerted = false;
 	while (window.isOpen() && player == 1) {
 		Event event;
 
@@ -279,12 +279,21 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 					break;
 				case Keyboard::Backspace:
 					playerStands = true;
+					player = 2;
 					break;
 				default:
 					break;
 				}
 			}
 		}
+
+		// if score == 20 playerStands = true;
+		// if score > 20 && !alerted;
+				// play bustwarning.wav
+				// alerted = true;
+				// if playerSideCards is empty
+					// playerStands = true;
+
 
 		this->displayMatch(window);
 	}
