@@ -28,6 +28,9 @@ public:
 	void dealMainCard(Card*& newCardSlot, int& player);
 	void playerDecision(RenderWindow& window, int& player, bool& playerStands);
 	void playSideCard(Card*& sideCard, int& player);
+	void playerWinsASet();
+	void computerWinsASet();
+	void updatePlayerScore();
 
 
 private:
@@ -40,5 +43,7 @@ private:
 	int mComputerCardsDealt;
 	int mPlayerSetWins;
 	int mComputerSetWins;
+	int mPlayerScore;
+	int mComputerScore;
 };
 

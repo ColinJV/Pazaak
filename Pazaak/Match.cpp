@@ -22,6 +22,8 @@ Match::Match() {
 	mComputerCardsDealt = 0;
 	mPlayerSetWins = 0;
 	mComputerSetWins = 0;
+	mPlayerScore = 0;
+	mComputerScore = 0;
 
 	for (int index = 0; index < MAIN_HAND_SIZE; ++index) {
 		playerMainCards[index] = nullptr;
@@ -129,6 +131,20 @@ int Match::playMatch(RenderWindow& window) {
 			// play drawmain.wav sound
 			// computerDecision();
 		}
+		if (playerStands && computerStands) {
+			if (mPlayerScore > mComputerScore) {
+				playerWinsASet();
+			}
+			else if (mComputerScore > mPlayerScore) {
+				computerWinsASet();
+			}
+			else {
+				// tied set
+			}
+			playerStands = false;
+			computerStands = false;
+			player = 1;
+		}
 
 		this->displayMatch(window);
 	}
@@ -234,9 +250,17 @@ void Match::dealMainCard(Card*& newCardSlot, int& player) {
 void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands) {
 	bool sideCardPlayed = false, alerted = false;
 	while (window.isOpen() && player == 1) {
+
+		if (mPlayerScore == 20) {
+			playerStands = true;
+			player = 2;
+		}
+		else if (mPlayerScore > 20) {
+			// play bustwarning.wav
+		}
 		Event event;
 
-		if (window.pollEvent(event)) {
+		if (window.pollEvent(event) && !playerStands) {
 			if (event.type == Event::Closed) {
 				window.close();
 			}
@@ -269,11 +293,12 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 						sideCardPlayed = true;
 					}
 					break;
-				case Keyboard::Dash:
+				case Keyboard::Num5:
 					dynamic_cast <SwitchCard*> (playerSideCards[2])->modifyCard();
 					break;
-				case Keyboard::Equal:
+				case Keyboard::Num6:
 					dynamic_cast <SwitchCard*> (playerSideCards[3])->modifyCard();
+					break;
 				case Keyboard::Enter:
 					player = 2;
 					break;
@@ -313,4 +338,19 @@ void Match::playSideCard(Card*& sideCard, int& player) {
 			sideCard = nullptr;
 		}
 	}
+}
+
+
+void Match::playerWinsASet() {
+	gameBoard->setPlayerIndicator(++mPlayerSetWins);
+}
+
+
+void Match::computerWinsASet() {
+	gameBoard->setBotIndicator(++mComputerSetWins);
+}
+
+
+void Match::updatePlayerScore() {
+
 }

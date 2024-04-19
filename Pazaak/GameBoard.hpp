@@ -31,7 +31,7 @@ public:
 	void setTurnIndicator(int player);
 	Vector2f getBotCardPosition(int card);
 	Vector2f getPlayerCardPosition(int card);
-	
+	const Font& getFont() const;
 	
 private:
 	vector<RectangleShape> playerHand;

@@ -13,12 +13,19 @@
 ********************************************************************************************************/
 
 Card::Card(const int& cardValue) {
+	if (!fontType.loadFromFile("Old_R.ttf")) {
+		cout << "Failure to load font." << endl;
+	}
 	mValue = cardValue;
 	mCard = RectangleShape(Vector2f(100.f, 125.f));
 	mCard.setFillColor(Color::Black);
 	mCard.setOutlineColor(Color::White);
 	mCard.setOutlineThickness(3.f);
+	mText.setFont(fontType);
 	mText.setString(std::to_string(mValue));
+	mText.setOutlineColor(Color::Black);
+	mText.setOutlineThickness(2.f);
+	mText.setCharacterSize(15);
 }
 
 

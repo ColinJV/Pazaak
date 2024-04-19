@@ -171,13 +171,16 @@ void MainMenu::drawRules(RenderWindow& window) const
 		"Upon playing a card from the Side Deck, or choosing not to, the player may end their turn or stand.\n"
 		"Standing will end all your action for the current set.\n"
 		"The objective is to reach a total score of 20 without exceeding 20, a.k.a. busting.\n"
+		"A bust occurs when a player's turn ends when they have more than 20 points.\n"
+		"If your score exceeds 20 and is then reduced by playing a card from the Side Deck,\n"
+		"a bust has not occurred and play will continue.\n"
 		"If a player busts, their opponent wins the set automatically.\n"
 		"If a player reaches 20 points, they stand automatically.\n"
 		"If a player has 9 cards on their board and has not busted, they win the set automatically.\n"
 		"The first player to win three sets wins the match.\n\n\n\n"
-		"Enter to End Turn. Backspace to Stand and end your action for this set.\n"
-		"Num1 through Num4 to use your Side Deck cards 1-4 respectively.\n"
-		"The '-' and '=' keys will modify the value of your third and fourth\n"
+		"Enter to End Turn. Backspace to Stand and end your action for the current set.\n"
+		"'1', '2', '3', and '4' keys to use your Side Deck cards 1-4 respectively.\n"
+		"The '5' and '6' keys will modify the value of your third or fourth\n"
 		"Side Deck cards, switching the sign between positive and negative.\n\n\n"
 		"Press Enter/Spacebar to return to the Main Menu.");
 	rules.setPosition(70, 100);
@@ -187,7 +190,7 @@ void MainMenu::drawRules(RenderWindow& window) const
 	controlsHeader.setFillColor(Color::Yellow);
 	controlsHeader.setString("Controls");
 	controlsHeader.setCharacterSize(30);
-	controlsHeader.setPosition(50, 500);
+	controlsHeader.setPosition(50, 580);
 
 	while (!finishedReading && window.isOpen()) {
 		Event event;

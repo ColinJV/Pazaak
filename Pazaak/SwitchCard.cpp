@@ -53,4 +53,10 @@ void SwitchCard::drawCardInWindow(RenderWindow& window) {
 void SwitchCard::modifyCard(void) {
 	mValue *= mModifier;
 	mText.setString(std::to_string(mValue));
+	if (mValue < 0) {
+		mCard.setFillColor(Color::Red);
+	}
+	else {
+		mCard.setFillColor(Color::Blue);
+	}
 }
