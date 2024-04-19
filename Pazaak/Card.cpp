@@ -14,7 +14,7 @@
 
 Card::Card(const int& cardValue) {
 	mValue = cardValue;
-	mCard = RectangleShape(Vector2f(100.f, 200.f));
+	mCard = RectangleShape(Vector2f(100.f, 125.f));
 	mCard.setFillColor(Color::Black);
 	mCard.setOutlineColor(Color::White);
 	mCard.setOutlineThickness(3.f);
