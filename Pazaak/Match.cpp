@@ -132,7 +132,7 @@ int Match::playMatch(RenderWindow& window) {
 
 		this->displayMatch(window);
 	}
-
+	return(winnerID);
 }
 
 

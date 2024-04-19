@@ -17,12 +17,11 @@
 * 
 */
 
-
 #include "Game.hpp"
 
 int main()
 {
-    Game newGame;
-    newGame.runGame();
-    return 0;
+	Game newGame;
+	newGame.runGame();
+	return(0);
 }

@@ -165,6 +165,7 @@ void MainMenu::drawRules(RenderWindow& window) const
 		"Side Deck cards can be used to increase or decrease your total score.\n"
 		"Side Card 1 increases your score. Side Card 2 decreases your score.\n"
 		"Side Cards 3 and 4 can increase or decrease your score, depending on your choice.\n"
+		"A player may use only one card from their Side Deck per turn at most.\n"
 		"Upon playing a card from the Side Deck, or choosing not to, the player may end their turn or stand.\n"
 		"Standing will end all your action for the current set.\n"
 		"The objective is to reach a total score of 20 without exceeding 20, a.k.a. busting.\n"
@@ -184,7 +185,7 @@ void MainMenu::drawRules(RenderWindow& window) const
 	controlsHeader.setFillColor(Color::Yellow);
 	controlsHeader.setString("Controls");
 	controlsHeader.setCharacterSize(30);
-	controlsHeader.setPosition(50, 490);
+	controlsHeader.setPosition(50, 500);
 
 	while (!finishedReading && window.isOpen()) {
 		Event event;
