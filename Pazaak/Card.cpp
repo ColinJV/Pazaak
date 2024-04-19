@@ -18,6 +18,7 @@ Card::Card(const int& cardValue) {
 	mCard.setFillColor(Color::Black);
 	mCard.setOutlineColor(Color::White);
 	mCard.setOutlineThickness(3.f);
+	mText.setString(std::to_string(mValue));
 }
 
 
