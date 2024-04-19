@@ -32,5 +32,5 @@ MainCard::~MainCard() {
 
 void MainCard::drawCardInWindow(RenderWindow& window) {
 	window.draw(this->mCard);
-	// will need to print a text box on the card to indicate its value
+	window.draw(this->mText);
 }

@@ -7,6 +7,7 @@ using sf::RectangleShape;
 using sf::Vector2f;
 using sf::RenderWindow;
 using sf::Text;
+using sf::Font;
 using std::cout;
 using std::endl;
 
@@ -37,5 +38,6 @@ protected:
 	int mValue;
 	RectangleShape mCard;
 	Text mText;
+	Font fontType;
 };
 

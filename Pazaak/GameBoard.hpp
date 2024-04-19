@@ -32,7 +32,6 @@ public:
 	Vector2f getBotCardPosition(int card);
 	Vector2f getPlayerCardPosition(int card);
 	
-	
 private:
 	vector<RectangleShape> playerHand;
 	vector<RectangleShape> botHand;

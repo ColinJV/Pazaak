@@ -21,6 +21,7 @@
 
 int main()
 {
+	srand((unsigned int)time(NULL));
 	Game newGame;
 	newGame.runGame();
 	return(0);
