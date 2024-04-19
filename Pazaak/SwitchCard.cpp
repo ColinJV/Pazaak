@@ -18,7 +18,7 @@ SwitchCard::~SwitchCard() {
 
 
 /********************************************************************************************************
-* Function: displayCard()																				*
+* Function: drawCardInWindow()																			*
 * Date Created: 4/13/2024																				*
 * Date Last Modified: 4/13/2024																			*
 * Programmer: Colin Van Dyke																			*
@@ -30,8 +30,33 @@ SwitchCard::~SwitchCard() {
 * Postconditions: None																					*
 ********************************************************************************************************/
 
-void SwitchCard::displayCard(RenderWindow& window) {
+void SwitchCard::drawCardInWindow(RenderWindow& window) {
 	window.draw(this->mCard);
-	// need something that draws a textbox indicating the SwitchCard's value
+	window.draw(this->mText);
 	// need something that draws a toggle +/- that indicates whether the value is positive or negative
+}
+
+
+/********************************************************************************************************
+* Function: modifyCard()																				*
+* Date Created: 4/13/2024																				*
+* Date Last Modified: 4/13/2024																			*
+* Programmer: Colin Van Dyke																			*
+* Description: Multiplies the mValue data member of a SwitchCard by the mModifier data member. Changes	*
+* the target SwitchCard's Text string to the new value.													*
+* Input parameters: void																				*
+* Returns: void																							*
+* Preconditions: None																					*
+* Postconditions: None																					*
+********************************************************************************************************/
+
+void SwitchCard::modifyCard(void) {
+	mValue *= mModifier;
+	mText.setString(std::to_string(mValue));
+	if (mValue < 0) {
+		mCard.setFillColor(Color::Red);
+	}
+	else {
+		mCard.setFillColor(Color::Blue);
+	}
 }

@@ -12,7 +12,8 @@ public:
 	~SwitchCard();
 
 	// METHODS
-	void displayCard(RenderWindow& window) override;
+	void drawCardInWindow(RenderWindow& window) override;
+	void modifyCard(void);
 
 private:
 	int mModifier;

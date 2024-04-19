@@ -13,11 +13,19 @@
 ********************************************************************************************************/
 
 Card::Card(const int& cardValue) {
+	if (!fontType.loadFromFile("Old_R.ttf")) {
+		cout << "Failure to load font." << endl;
+	}
 	mValue = cardValue;
-	mCard = RectangleShape(Vector2f(100.f, 200.f));
+	mCard = RectangleShape(Vector2f(100.f, 125.f));
 	mCard.setFillColor(Color::Black);
 	mCard.setOutlineColor(Color::White);
 	mCard.setOutlineThickness(3.f);
+	mText.setFont(fontType);
+	mText.setString(std::to_string(mValue));
+	mText.setOutlineColor(Color::Black);
+	mText.setOutlineThickness(2.f);
+	mText.setCharacterSize(15);
 }
 
 
@@ -105,4 +113,31 @@ void Card::setValue(int& newValue) {
 
 void Card::setColor(Color& newColor) {
 	mCard.setFillColor(newColor);
+}
+
+
+/********************************************************************************************************
+* Function: setPosition()																				*
+* Date Created: 4/18/2024																				*
+* Date Last Modified: 4/18/2024																			*
+* Programmer: Colin Van Dyke																			*
+* Description: Sets the position of the RectangleShape of a Card object to the Vector2f newPosition		*
+* input, and the position of the Text of the Card object to an offset from newPosition.					*
+* Input parameters: sf::Vector2f newPosition															*
+* Returns: void																							*
+* Preconditions: None																					*
+* Postconditions: None																					*
+********************************************************************************************************/
+void Card::setPosition(const Vector2f& newPosition) {
+	mCard.setPosition(newPosition);
+	mText.setPosition({ newPosition.x + 10, newPosition.y + 10 });
+}
+
+
+const RectangleShape& Card::getShape(void) const {
+	return(mCard);
+}
+
+const Text& Card::getText(void) const {
+	return(mText);
 }

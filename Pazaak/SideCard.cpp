@@ -18,7 +18,7 @@ SideCard::~SideCard() {
 
 
 /********************************************************************************************************
-* Function: displayCard()																				*
+* Function: drawCardInWindow()																			*
 * Date Created: 4/13/2024																				*
 * Date Last Modified: 4/13/2024																			*
 * Programmer: Colin Van Dyke																			*
@@ -30,7 +30,7 @@ SideCard::~SideCard() {
 * Postconditions: None																					*
 ********************************************************************************************************/
 
-void SideCard::displayCard(RenderWindow& window) {
+void SideCard::drawCardInWindow(RenderWindow& window) {
 	window.draw(this->mCard);
-	// need to draw a text box on the card that indicates its value
+	window.draw(this->mText);
 }

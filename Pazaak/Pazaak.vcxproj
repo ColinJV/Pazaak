@@ -134,14 +134,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainCard.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Match.cpp" />
     <ClCompile Include="SideCard.cpp" />
     <ClCompile Include="SwitchCard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="MainCard.hpp" />
+    <ClInclude Include="MainMenu.hpp" />
+    <ClInclude Include="Match.hpp" />
     <ClInclude Include="SideCard.hpp" />
     <ClInclude Include="SwitchCard.hpp" />
   </ItemGroup>
