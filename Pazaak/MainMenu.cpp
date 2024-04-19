@@ -3,7 +3,7 @@
 /********************************************************************************************************
 * Function: MainMenu constructor																		*
 * Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
+* Date Last Modified: 4/17/2024																			*
 * Programmer: Colin Van Dyke																			*
 * Description: Constructs a MainMenu object.															*
 * Input parameters: void																				*
@@ -21,26 +21,28 @@ MainMenu::MainMenu() {
 	backgroundTexture.loadFromFile("splashMenu.png");
 	backgroundImage.setTexture(&backgroundTexture);
 
+	mainMenuText = new Text[NUMBER_OF_OPTIONS];
+
 	// Play
-	mainMenu[0].setFont(fontType);
-	mainMenu[0].setFillColor(Color::Yellow);
-	mainMenu[0].setString("1. Play Game");
-	mainMenu[0].setCharacterSize(20);
-	mainMenu[0].setPosition(800, 425);
+	mainMenuText[0].setFont(fontType);
+	mainMenuText[0].setFillColor(Color::Yellow);
+	mainMenuText[0].setString("1. Play Game");
+	mainMenuText[0].setCharacterSize(20);
+	mainMenuText[0].setPosition(800, 425);
 
 	// Rules
-	mainMenu[1].setFont(fontType);
-	mainMenu[1].setFillColor(Color(0, 166, 248, 255));
-	mainMenu[1].setString("2. Rules");
-	mainMenu[1].setCharacterSize(20);
-	mainMenu[1].setPosition(835, 490);
+	mainMenuText[1].setFont(fontType);
+	mainMenuText[1].setFillColor(Color(0, 166, 248, 255));
+	mainMenuText[1].setString("2. Rules");
+	mainMenuText[1].setCharacterSize(20);
+	mainMenuText[1].setPosition(835, 490);
 
 	// Quit
-	mainMenu[2].setFont(fontType);
-	mainMenu[2].setFillColor(Color(0, 166, 248, 255));
-	mainMenu[2].setString("3. Quit");
-	mainMenu[2].setCharacterSize(20);
-	mainMenu[2].setPosition(850, 560);
+	mainMenuText[2].setFont(fontType);
+	mainMenuText[2].setFillColor(Color(0, 166, 248, 255));
+	mainMenuText[2].setString("3. Quit");
+	mainMenuText[2].setCharacterSize(20);
+	mainMenuText[2].setPosition(850, 560);
 
 	userSelection = 0;
 }
@@ -58,14 +60,14 @@ MainMenu::MainMenu() {
 * Postconditions: None																					*
 ********************************************************************************************************/
 MainMenu::~MainMenu() {
-
+	delete[] mainMenuText;
 }
 
 
 /********************************************************************************************************
 * Function: drawMainMenu()																				*
 * Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
+* Date Last Modified: 4/17/2024																			*
 * Programmer: Colin Van Dyke																			*
 * Description: Draws the MainMenu text on the input RenderWindow										*
 * Input parameters: RenderWindow& window, a reference to a RenderWindow that is the game's graphics		*
@@ -78,7 +80,7 @@ void MainMenu::drawMainMenu(RenderWindow& window) {
 	window.draw(backgroundImage);
 
 	for (int index = 0; index < 3; ++index) {
-		window.draw(mainMenu[index]);
+		window.draw(mainMenuText[index]);
 	}
 }
 
@@ -86,7 +88,7 @@ void MainMenu::drawMainMenu(RenderWindow& window) {
 /********************************************************************************************************
 * Function: moveUp()																					*
 * Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
+* Date Last Modified: 4/17/2024																			*
 * Programmer: Colin Van Dyke																			*
 * Description: Modifies which option on the main menu is highlighted and decrements the userSelection	*
 * member variable of MainMenu. Checks if userSelection is out of bounds and corrects it if it is.		*
@@ -97,11 +99,11 @@ void MainMenu::drawMainMenu(RenderWindow& window) {
 ********************************************************************************************************/
 void MainMenu::moveUp() {
 	if (userSelection >= 0) {
-		mainMenu[userSelection--].setFillColor(Color(0, 166, 248, 255));
+		mainMenuText[userSelection--].setFillColor(Color(0, 166, 248, 255));
 		if (userSelection == -1) {
 			userSelection = 2;
 		}
-		mainMenu[userSelection].setFillColor(Color::Yellow);
+		mainMenuText[userSelection].setFillColor(Color::Yellow);
 	}
 }
 
@@ -109,7 +111,7 @@ void MainMenu::moveUp() {
 /********************************************************************************************************
 * Function: moveUp()																					*
 * Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
+* Date Last Modified: 4/17/2024																			*
 * Programmer: Colin Van Dyke																			*
 * Description: Modifies which option on the main menu is highlighted and increments the userSelection	*
 * member variable of MainMenu. Checks if userSelection is out of bounds and corrects it if it is.		*
@@ -120,11 +122,11 @@ void MainMenu::moveUp() {
 ********************************************************************************************************/
 void MainMenu::moveDown() {
 	if (userSelection <= NUMBER_OF_OPTIONS) {
-		mainMenu[userSelection++].setFillColor(Color(0, 166, 248, 255));
+		mainMenuText[userSelection++].setFillColor(Color(0, 166, 248, 255));
 		if (userSelection == NUMBER_OF_OPTIONS) {
 			userSelection = 0;
 		}
-		mainMenu[userSelection].setFillColor(Color::Yellow);
+		mainMenuText[userSelection].setFillColor(Color::Yellow);
 	}
 }
 
@@ -240,8 +242,8 @@ int MainMenu::getUserSelection() {
 /********************************************************************************************************
 * Function: runMainMenu()																				*
 * Date Created: 4/14/2024																				*
-* Date Last Modified: 4/16/2024																			*
-* Programmer: Colin Van Dyke, Nick McBrayer																			*
+* Date Last Modified: 4/17/2024																			*
+* Programmer: Colin Van Dyke, Nick McBrayer																*
 * Description: Main logic function for MainMenu object. Draws and displays the MainMenu to the window	*
 * and conducts event polling. Highlights various menu options based on userSelection value. Loops until *
 * the window closes or until the player chooses to play the game, at which point a boolean flag is set	*
@@ -287,7 +289,15 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 					this->moveUp();
 					sound1.play();
 					break;
-				case Keyboard::Down:
+				case Keyboard::W:
+					this->moveUp();
+					sound1.play();
+					break;
+				case Keyboard::S:
+					this->moveDown();
+					sound1.play();
+					break;
+				case Keyboard::Down: 
 					this->moveDown();
 					sound1.play();
 					break;
@@ -308,12 +318,15 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 					}
 					break;
 				case Keyboard::Num1:
+					sound2.play();
 					playGame = true;
 					break;
 				case Keyboard::Num2:
+					sound2.play();
 					this->drawRules(window);
 					break;
 				case Keyboard::Num3:
+					sound2.play();
 					window.close();
 					break;
 				case Keyboard::Escape:
@@ -323,13 +336,113 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 					break;
 				}
 			}
-
+			if (event.type == Event::MouseMoved) {
+				Vector2f mousePosition;
+				mousePosition.x = sf::Mouse::getPosition(window).x;
+				mousePosition.y = sf::Mouse::getPosition(window).y;
+				if (mainMenuText[0].getGlobalBounds().contains(mousePosition)) {
+					if (userSelection != 0) {
+						userHoversPlayGame();
+						sound1.play();
+					}
+				}
+				else if (mainMenuText[1].getGlobalBounds().contains(mousePosition)) {
+					if (userSelection != 1) {
+						userHoversRules();
+						sound1.play();
+					}
+				}
+				else if (mainMenuText[2].getGlobalBounds().contains(mousePosition)) {
+					if (userSelection != 2) {
+						userHoversQuit();
+						sound1.play();
+					}
+				}
+			}
+			if (event.type == Event::MouseButtonReleased) {
+				Vector2f mousePosition;
+				mousePosition.x = sf::Mouse::getPosition(window).x;
+				mousePosition.y = sf::Mouse::getPosition(window).y;
+				if (mainMenuText[0].getGlobalBounds().contains(mousePosition) && userSelection == 0) {
+					playGame = true;
+					sound2.play();
+				}
+				else if (mainMenuText[1].getGlobalBounds().contains(mousePosition) && userSelection == 1) {
+					sound2.play();
+					this->drawRules(window);
+				}
+				else if (mainMenuText[2].getGlobalBounds().contains(mousePosition) && userSelection == 2) {
+					sound2.play();
+					window.close();
+				}
+			}
+		}
+		if (window.isOpen()) {
 			window.clear();
-
 			this->drawMainMenu(window);
-
 			window.display();
 		}
 	}
+	music.stop();
 	return(playGame);
+}
+
+
+/********************************************************************************************************
+* Function: userHoversPlayGame()																		*
+* Date Created: 4/17/2024																				*
+* Date Last Modified: 4/17/2024																			*
+* Programmer: Colin Van Dyke																			*
+* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text	*
+* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 0 to		*
+* Yellow.																								*
+* Input parameters: void																				*
+* Returns: void																							*
+* Preconditions: None																					*
+* Postconditions: None																					*
+********************************************************************************************************/
+void MainMenu::userHoversPlayGame() {
+	mainMenuText[userSelection].setFillColor(Color(0, 166, 248, 255));
+	userSelection = 0;
+	mainMenuText[userSelection].setFillColor(Color::Yellow);
+}
+
+
+/********************************************************************************************************
+* Function: userHoversRules()																			*
+* Date Created: 4/17/2024																				*
+* Date Last Modified: 4/17/2024																			*
+* Programmer: Colin Van Dyke																			*
+* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text	*
+* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 1 to		*
+* Yellow.																								*
+* Input parameters: void																				*
+* Returns: void																							*
+* Preconditions: None																					*
+* Postconditions: None																					*
+********************************************************************************************************/
+void MainMenu::userHoversRules() {	
+	mainMenuText[userSelection].setFillColor(Color(0, 166, 248, 255));
+	userSelection = 1;
+	mainMenuText[userSelection].setFillColor(Color::Yellow);
+}
+
+
+/********************************************************************************************************
+* Function: userHoversQuit()																			*
+* Date Created: 4/17/2024																				*
+* Date Last Modified: 4/17/2024																			*
+* Programmer: Colin Van Dyke																			*
+* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text	*
+* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 2 to		*
+* Yellow.																								*
+* Input parameters: void																				*
+* Returns: void																							*
+* Preconditions: None																					*
+* Postconditions: None																					*
+********************************************************************************************************/
+void MainMenu::userHoversQuit() {
+	mainMenuText[userSelection].setFillColor(Color(0, 166, 248, 255));
+	userSelection = 2;
+	mainMenuText[userSelection].setFillColor(Color::Yellow);
 }
