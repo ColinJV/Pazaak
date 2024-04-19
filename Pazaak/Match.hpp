@@ -2,12 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include "SwitchCard.hpp"
 #include "MainCard.hpp"
-#include <iostream>
-#include <vector>
+#include "GameBoard.hpp"
+
 #define MAIN_HAND_SIZE 9
 #define SIDE_HAND_SIZE 4
 
 using sf::RenderWindow;
+using sf::Event;
+using sf::Keyboard;
 
 class Match
 {
@@ -20,16 +22,23 @@ public:
 
 	// METHOD
 	void initializeSideDecks();
-	unsigned int playMatch(RenderWindow& window);
+	int playMatch(RenderWindow& window);
 	void displayMatch(RenderWindow& window);
+	void drawAllCardsOnBoard(RenderWindow& window);
+	void dealMainCard(Card*& newCardSlot, int& player);
+	void playerDecision(RenderWindow& window, int& player, bool& playerStands);
+	void playSideCard(Card*& sideCard, int& player);
+
 
 private:
-	// Board* gameBoard;
+	GameBoard* gameBoard;
 	Card** playerMainCards;
 	Card** playerSideCards;
 	Card** computerMainCards;
 	Card** computerSideCards;
-	unsigned int playerCardsDealt;
-	unsigned int computerCardsDealt;
+	int mPlayerCardsDealt;
+	int mComputerCardsDealt;
+	int mPlayerSetWins;
+	int mComputerSetWins;
 };
 

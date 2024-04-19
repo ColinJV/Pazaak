@@ -174,8 +174,8 @@ void MainMenu::drawRules(RenderWindow& window) const
 		"The first player to win three sets wins the match.\n\n\n\n"
 		"Enter to End Turn. Backspace to Stand and end your action for this set.\n"
 		"Num1 through Num4 to use your Side Deck cards 1-4 respectively.\n"
-		"Shift+Num3 and Shift+Num4 will swap the value of your third and fourth\n"
-		"Side Deck cards between positive and negative.\n\n\n"
+		"The '-' and '=' keys will modify the value of your third and fourth\n"
+		"Side Deck cards, switching the sign between positive and negative.\n\n\n"
 		"Press Enter/Spacebar to return to the Main Menu.");
 	rules.setPosition(70, 100);
 	rules.setCharacterSize(15);
@@ -276,9 +276,7 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 	sound2.setVolume(20);
 	while (window.isOpen() && playGame == false) {
 		Event event;
-		
-		
-		
+
 		if (window.pollEvent(event)) {
 			if (event.type == Event::Closed) {
 				window.close();
@@ -320,6 +318,8 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 					break;
 				case Keyboard::Escape:
 					window.close();
+					break;
+				default:
 					break;
 				}
 			}

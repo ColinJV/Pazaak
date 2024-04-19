@@ -50,22 +50,23 @@ Game::~Game() {
 ********************************************************************************************************/
 void Game::runGame() {
 	MainMenu mainMenu;
-	unsigned int winner = -1;
+	int winner = -1;
 
 	while (mGameWindow.isOpen()) {
 		bool playGame = false;
 		playGame = mainMenu.runMainMenu(mGameWindow);
 		if (playGame == true) {
-			// Match newMatch;
-			// winner = newMatch.playMatch(mGameWindow);
+			Match newMatch;
+			winner = newMatch.playMatch(mGameWindow);
 			if (winner == PLAYER_WINS) {
 				this->playerVictory();
-				// play sound effect of Niklos whining about losing
 			}
 			else {
 				this->computerVictory();
-				// play sound effect of Niklos gloating
 			}
+			// can play different dialogue files here depending on winner, or depending on differential
+			// between player wins and computer wins. Niklos has some dialogue that accuses you of
+			// cheating if you beat him too many times, could be funny to include.
 		}
 	}
 }

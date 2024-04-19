@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "MainMenu.hpp"
+#include "Match.hpp"
 
 #define PLAYER_WINS 1
 #define COMPUTER_WINS 2

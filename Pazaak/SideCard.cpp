@@ -32,5 +32,5 @@ SideCard::~SideCard() {
 
 void SideCard::drawCardInWindow(RenderWindow& window) {
 	window.draw(this->mCard);
-	// need to draw a text box on the card that indicates its value
+	window.draw(this->mText);
 }

@@ -22,15 +22,15 @@ public:
 	// ACCESSOR
 	const int& getValue(void) const;
 	const Color& getColor(void) const;
+	const RectangleShape& getShape(void) const;
+	const Text& getText(void) const;
 
 	// MUTATOR
 	void setValue(int& newValue);
 	void setColor(Color& newColor);
+	void setPosition(const Vector2f& newPosition);
 
 	// DISPLAY
-	// This will draw the Card with an overridden function in the inherited class
-	// I understand this is dumb and completely unnecessary, but it was the
-	// only way I could think of to implement polymorphism
 	virtual void drawCardInWindow(RenderWindow& window) = 0;
 
 protected:

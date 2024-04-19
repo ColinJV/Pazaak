@@ -1,9 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <vector>
 
-
-using namespace std;
-using namespace sf;
+using std::vector;
+using std::cout;
+using std::endl;
+using sf::RectangleShape;
+using sf::CircleShape;
+using sf::Vector2f;
+using sf::RenderWindow;
+using sf::Color;
+using sf::Font;
+using sf::Text;
 
 class GameBoard
 {
@@ -32,14 +40,18 @@ private:
 	vector<CircleShape> playerIndicator;
 	vector<CircleShape> botIndicator;
 	vector<CircleShape> turnIndicator;
+	Font fontType;
+	Text turnIndicatorText;
+	Text playerText;
+	Text botText;
 };
 
 /********************************************************************************************************
 * Function: GameBoard constructor
 * Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
-* Description: Initializes all the shapes on the gameboard.				
+* Date Last Modified: 4/18/2024
+* Programmer: Caitlyn Boyd, Colin Van Dyke
+* Description: Initializes all the shapes and text on the gameboard.				
 * Input parameters:NONE
 * Returns: void	
 * Preconditions: None
@@ -53,6 +65,30 @@ GameBoard::GameBoard()
 	background.setSize({ 1600, 900 });
 	background.setFillColor(lightGrey);
 	background.setPosition(0, 0);
+
+	if (!fontType.loadFromFile("Old_R.ttf")) {
+		cout << "Failure to load font." << endl;
+	}
+	playerText.setFont(fontType);
+	playerText.setCharacterSize(40);
+	playerText.setStyle(Text::Bold);
+	playerText.setFillColor(Color::Black);
+	playerText.setPosition({ 225.f, 60.f });
+	playerText.setString("Player");
+
+	botText.setFont(fontType);
+	botText.setCharacterSize(40);
+	botText.setStyle(Text::Bold);
+	botText.setFillColor(Color::Black);
+	botText.setPosition({ 225.f + 840, 60.f }); // ignore weird math, it just helped keep positions consistent
+	botText.setString("Opponent");
+
+	turnIndicatorText.setFont(fontType);
+	turnIndicatorText.setCharacterSize(20);
+	turnIndicatorText.setStyle(Text::Bold);
+	turnIndicatorText.setFillColor(Color::Black);
+	turnIndicatorText.setPosition({ 735, 150 });
+	turnIndicatorText.setString("Turn");
 	
 	// initializes cards
 	initCards();
@@ -123,7 +159,7 @@ void GameBoard::initCards()
 }
 
 /********************************************************************************************************
-* Function: GameBoard constructor
+* Function: getPlayerHand
 * Date Created: 4/17/2024
 * Date Last Modified: 4/17/2024
 * Programmer: Caitlyn Boyd
@@ -142,8 +178,8 @@ vector<RectangleShape> GameBoard::getPlayerHand()
 /********************************************************************************************************
 * Function: display
 * Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
+* Date Last Modified: 4/18/2024
+* Programmer: Caitlyn Boyd, Colin Van Dyke
 * Description: draws all the gameboard elements to a RenderWindow.
 * Input parameters: RenderWindow& window
 * Returns: void
@@ -171,41 +207,10 @@ void GameBoard::display(RenderWindow& window)
 		window.draw(botIndicator[i]);
 		window.draw(playerIndicator[i]);
 	}
-	Font font;
-
-	font.loadFromFile("Old_R.ttf");
-	Text playerText;
-	sf::String test = "Player";
-	playerText.setFont(font);
-	playerText.setCharacterSize(40);
-	playerText.setStyle(Text::Bold);
-	playerText.setFillColor(Color::Black);
-	playerText.setPosition({ 225.f, 60.f});
-	playerText.setString(test);
-
 
 	window.draw(playerText);
-
-	Text botText;
-	botText.setFont(font);
-	botText.setCharacterSize(40);
-	botText.setStyle(Text::Bold);
-	botText.setFillColor(Color::Black);
-	botText.setPosition({225.f + 840, 60.f}); // ignore weird math, it just helped keep positions consistent
-	botText.setString("Opponent");
-
 	window.draw(botText);
-
-	Text turnInd;
-	turnInd.setFont(font);
-	turnInd.setCharacterSize(20);
-	turnInd.setStyle(Text::Bold);
-	turnInd.setFillColor(Color::Black);
-	turnInd.setPosition({ 735, 150 });
-	turnInd.setString("Turn");
-
-	window.draw(turnInd);
-
+	window.draw(turnIndicatorText);
 	window.draw(turnIndicator[0]);
 	window.draw(turnIndicator[1]);
 }
@@ -324,7 +329,7 @@ void GameBoard::setBotIndicator(int score)
 * Function: setTurnIndicator
 * Date Created: 4/17/2024
 * Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
+* Programmer: Caitlyn Boyd, Colin Van Dyke
 * Description: A mutator method for the turn indicator in the center of the board. Input 1 (player) or 2 (bot) to change the indicator.
 * Input parameters: int player
 * Returns: void
@@ -333,28 +338,26 @@ void GameBoard::setBotIndicator(int score)
 ********************************************************************************************************/
 void GameBoard::setTurnIndicator(int player)
 {
-	if (player > 0 && player < 3)
+	switch (player)
 	{
-		switch (player)
-		{
-		case 1:
-			turnIndicator[0].setFillColor(Color::Red);
-			turnIndicator[1].setFillColor(Color(64, 64, 64));
-			break;
-		case 2:
-			turnIndicator[1].setFillColor(Color::Red);
-			turnIndicator[0].setFillColor(Color(64, 64, 64));
-			break;
-		}
-	}
-	
+	case 1:
+		turnIndicator[0].setFillColor(Color::Red);
+		turnIndicator[1].setFillColor(Color(64, 64, 64));
+		break;
+	case 2:
+		turnIndicator[1].setFillColor(Color::Red);
+		turnIndicator[0].setFillColor(Color(64, 64, 64));
+		break;
+	default:
+		break;
+	}	
 }
 
 /********************************************************************************************************
 * Function: getBotCardPosition
 * Date Created: 4/17/2024
 * Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
+* Programmer: Caitlyn Boyd, Colin Van Dyke
 * Description: Accessor method for each card on the right had side of the board based on their position in each vector.
 * Input parameters: int card
 * Returns: Vector2f result - position of the card selected.
@@ -372,7 +375,7 @@ Vector2f GameBoard::getBotCardPosition(int card)
 		}
 		else
 		{
-			result = botSide[card - 8].getPosition();
+			result = botSide[card - 9].getPosition();
 		}
 	}
 
@@ -383,7 +386,7 @@ Vector2f GameBoard::getBotCardPosition(int card)
 * Function: getPlayerCardPosition
 * Date Created: 4/17/2024
 * Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
+* Programmer: Caitlyn Boyd, Colin Van Dyke
 * Description: An accessor method for the cards on the left hand side of the gameboard according to their position in the vectors.
 * Input parameters: int card
 * Returns: Vector2f result - position of the card selected.
@@ -401,7 +404,7 @@ Vector2f GameBoard::getPlayerCardPosition(int card)
 		}
 		else
 		{
-			result = playerSide[card - 8].getPosition();
+			result = playerSide[card - 9].getPosition();
 		}
 	}
 
