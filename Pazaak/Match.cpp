@@ -1,16 +1,16 @@
 #include "Match.hpp"
 
 /********************************************************************************************************
-* Function: Match constructor																			*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Constructs a Match object. Instantiates four arrays of pointers to pointers to Cards on	*
-* the heap, setting the pointers to Cards to nullptr initially. Instantiates a Board object.			*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: Match constructor
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Constructs a Match object. Instantiates four arrays of pointers to pointers to Cards on
+* the heap, setting the pointers to Cards to nullptr initially. Instantiates a Board object.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 Match::Match() {
 	gameBoard = new GameBoard();
@@ -37,15 +37,15 @@ Match::Match() {
 
 
 /********************************************************************************************************
-* Function: Match destructor																			*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Destroys a Match object.																	*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: Match destructor
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Destroys a Match object.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 Match::~Match() {
 	for (int index = 0; index < MAIN_HAND_SIZE; ++index) {
@@ -60,28 +60,28 @@ Match::~Match() {
 
 
 /********************************************************************************************************
-* Function: initializeSideDecks()																		*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Generates SideCards and SwitchCards for the Player and Computer's Side Decks.			*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: initializeSideDecks()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Generates SideCards and SwitchCards for the Player and Computer's Side Decks.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Match::initializeSideDecks() {
 	for (int index = 0; index < 4; ++index) {
 		int cardValue = rand() % 6 + 1;
 		if (index < 2)	{
-			if (index == -1) {
+			if (index == 1) {
 				cardValue *= -1;
 			}
 			playerSideCards[index] = new SideCard(cardValue);
 			playerSideCards[index]->setPosition(gameBoard->getPlayerCardPosition(index + 9));
 
 			cardValue = rand() % 6 + 1;
-			if (index == -1) {
+			if (index == 1) {
 				cardValue *= -1;
 			}
 			computerSideCards[index] = new SideCard(cardValue);
@@ -101,19 +101,19 @@ void Match::initializeSideDecks() {
 
 
 /********************************************************************************************************
-* Function: playMatch()																					*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Contains main flow of game logic.														*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: playMatch()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Contains main flow of game logic.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 int Match::playMatch(RenderWindow& window) {
 	bool matchWinner = false, playerStands = false, computerStands = false;
-	int winnerID = -1, player = 1;
+	int winnerID = -1, player = 1, setWinner = 0;
 	this->initializeSideDecks();
 
 	while (window.isOpen() && !matchWinner) {
@@ -122,47 +122,72 @@ int Match::playMatch(RenderWindow& window) {
 			// play startturn.wav sound
 			dealMainCard(playerMainCards[mPlayerCardsDealt], player);
 			// play drawmain.wav sound
-			playerDecision(window, player, playerStands);
+			playerDecision(window, player, playerStands, computerStands);
 		}
-		else if (window.isOpen() && player == 2 && !computerStands) {
+		if (player == 1 && playerStands) {
+			player = 2;
+		}
+		if (window.isOpen() && player == 2 && !computerStands) {
 			gameBoard->setTurnIndicator(player);
 			// play startturn.wav sound
 			dealMainCard(computerMainCards[mComputerCardsDealt], player);
 			// play drawmain.wav sound
-			// computerDecision();
+			computerDecision(window, player, computerStands, playerStands);
+		}
+		if (player == 2 && computerStands) {
+			player = 1;
 		}
 		if (playerStands && computerStands) {
-			if (mPlayerScore > mComputerScore) {
-				playerWinsASet();
-			}
-			else if (mComputerScore > mPlayerScore) {
-				computerWinsASet();
+			setWinner = determineWinner();
+			incrementWins(setWinner);
+			if (!matchWinnerExists()) {
+				// if setWinner == 1
+				//		play winset.wav
+				//		popup system message saying you win the set
+				// if setWinner == 2
+				//		play loseset.wav
+				//		popup system message saying you lose the set
+				playerStands = false;
+				computerStands = false;
+				player = 1;
+				setWinner = 0;
+				resetSet();
 			}
 			else {
-				// tied set
+				matchWinner = true;
+				// if setWinner == 1 play winmatch.wav
+				// if setWinner == 2 play losematch.wav
+				// popup system message saying you win or you lose
+				winnerID = setWinner;
 			}
-			playerStands = false;
-			computerStands = false;
-			player = 1;
 		}
 
 		this->displayMatch(window);
+	}
+
+	if (matchWinner) {
+		if (mPlayerSetWins == 3) {
+			winnerID = 1;
+		}
+		else {
+			winnerID = 2;
+		}
 	}
 	return(winnerID);
 }
 
 
 /********************************************************************************************************
-* Function: displayMatch()																				*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/18/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Clears the game window, draws all relevant Match data members on the window and displays	*
-* the window.																							*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: displayMatch()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Clears the game window, draws all relevant Match data members on the window and displays
+* the window.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Match::displayMatch(RenderWindow& window) {
 	window.clear();
@@ -173,15 +198,15 @@ void Match::displayMatch(RenderWindow& window) {
 
 
 /********************************************************************************************************
-* Function: drawAllCardsOnBoard()																		*
-* Date Created: 4/18/2024																				*
-* Date Last Modified: 4/18/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Draws all Cards that are currently on the GameBoard.										*
-* Input parameters: RenderWindow& window, a reference to the game window.								*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: drawAllCardsOnBoard()
+* Date Created: 4/18/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Draws all Cards that are currently on the GameBoard.
+* Input parameters: RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Match::drawAllCardsOnBoard(RenderWindow& window) {
 	for (int index = 0; index < MAIN_HAND_SIZE && playerMainCards[index] != nullptr; ++index) {
@@ -210,54 +235,68 @@ void Match::drawAllCardsOnBoard(RenderWindow& window) {
 
 
 /********************************************************************************************************
-* Function: dealMainCard()																				*
-* Date Created: 4/18/2024																				*
-* Date Last Modified: 4/18/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Deals a MainCard into an array of Cards.													*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: dealMainCard()
+* Date Created: 4/18/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Deals a MainCard into an array of Cards.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Match::dealMainCard(Card*& newCardSlot, int& player) {
 	int cardValue = rand() % 10 + 1;
 	newCardSlot = new MainCard(cardValue);
 	if (player == 1) {
 		newCardSlot->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt++));
+		mPlayerScore += cardValue;
+		// something here that updates the Text in the score window
 	}
 	else {
 		newCardSlot->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt++));
+		mComputerScore += cardValue;
+		// something here that updates the Text in the score window
 	}
 }
 
 
 /********************************************************************************************************
-* Function: playerDecision()																			*
-* Date Created: 4/18/2024																				*
-* Date Last Modified: 4/18/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Contains Event polling functionality for the player's turn. Can call a variety of		*
-* functions based on player input, sets flags to avoid repeat actions. Loops until the game window		*
-* closes, the player ends their turn, or the player stands.												*
-* Input parameters: 1) RenderWindow& window, a reference to the game window. 2) int& player, a reference*
-* to an integer representing which player's turn it is, the user or the computer. 3) bool& playerStands,*
-* a reference to a boolean flag representing whether the user player has stood for the current set.		*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: playerDecision()
+* Date Created: 4/18/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Contains Event polling functionality for the player's turn. Can call a variety of
+* functions based on player input, sets flags to avoid repeat actions. Loops until the game window
+* closes, the player ends their turn, or the player stands.
+* Input parameters: 1) RenderWindow& window, a reference to the game window. 2) int& player, a reference
+* to an integer representing which player's turn it is, the user or the computer. 3) bool& playerStands,
+* a reference to a boolean flag representing whether the user player has stood for the current set.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
-void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands) {
+void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands, bool& computerStands) {
 	bool sideCardPlayed = false, alerted = false;
 	while (window.isOpen() && player == 1) {
 
-		if (mPlayerScore == 20) {
+		if (mPlayerScore >= 19) {
 			playerStands = true;
 			player = 2;
 		}
-		else if (mPlayerScore > 20) {
-			// play bustwarning.wav
+		if (mPlayerScore < 20 && mPlayerCardsDealt == 9) {
+			playerStands = true;
+			computerStands = true;
 		}
+		else if (mPlayerScore > 20 && !alerted) {
+			// play bustwarning.wav
+			alerted = true;
+			if (!playerHasSideCards()) {
+				playerStands = true;
+				player = 2;
+			}
+		}
+
 		Event event;
 
 		if (window.pollEvent(event) && !playerStands) {
@@ -301,6 +340,9 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 					break;
 				case Keyboard::Enter:
 					player = 2;
+					if (mPlayerScore > 20) {
+						playerStands = true;
+					}
 					break;
 				case Keyboard::Backspace:
 					playerStands = true;
@@ -312,45 +354,339 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 			}
 		}
 
-		// if score == 20 playerStands = true;
-		// if score > 20 && !alerted;
-				// play bustwarning.wav
-				// alerted = true;
-				// if playerSideCards is empty
-					// playerStands = true;
+		this->displayMatch(window);
+	}
+}
 
+
+/********************************************************************************************************
+* Function: playSideCard()
+* Date Created: 4/18/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Plays a SideCard at the address of the input reference to a Card*, updates the score of
+* the player who played the card, and sets the original pointer to nullptr.
+* Input parameters: 1) Card*& sideCard, a reference to a pointer to a Card that is going to be played to
+* the board. 2) const int& player, a reference to an integer representing which player is playing the
+* card.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::playSideCard(Card*& sideCard, const int& player) {
+	if (sideCard != nullptr) {
+		if (player == 1) {
+			sideCard->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt));
+			playerMainCards[mPlayerCardsDealt++] = sideCard;
+			mPlayerScore += sideCard->getValue();
+			sideCard = nullptr;
+		}
+		else {
+			sideCard->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt));
+			computerMainCards[mComputerCardsDealt++] = sideCard;
+			mComputerScore += sideCard->getValue();
+			sideCard = nullptr;
+		}
+	}
+}
+
+
+/********************************************************************************************************
+* Function: playerWinsASet()
+* Date Created: 4/18/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Updates the win count indicators on the game board and increments the player's win counter.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::playerWinsASet() {
+	gameBoard->setPlayerIndicator(++mPlayerSetWins);
+}
+
+
+/********************************************************************************************************
+* Function: computerWinsASet()
+* Date Created: 4/18/2024
+* Date Last Modified: 4/18/2024
+* Programmer: Colin Van Dyke
+* Description: Updates the win count indicators on the game board and increments the computer's win counter.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::computerWinsASet() {
+	gameBoard->setBotIndicator(++mComputerSetWins);
+}
+
+
+/********************************************************************************************************
+* Function: playerHasSideCards()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Iterates through the player's Side Deck and returns a boolean indicating whether the player
+* has any Side Cards left, true if yes, false if no.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+bool Match::playerHasSideCards() {
+	bool sideCardExists = false;
+	for (int index = 0; index < SIDE_HAND_SIZE && !sideCardExists; ++index) {
+		if (playerSideCards[index] != nullptr) {
+			sideCardExists = true;
+		}
+	}
+	return(sideCardExists);
+}
+
+
+/********************************************************************************************************
+* Function: computerHasSideCards()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Iterates through the computer's Side Deck and returns a boolean indicating whether the computer
+* has any Side Cards left, true if yes, false if no.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+bool Match::computerHasSideCards() {
+	bool sideCardExists = false;
+	for (int index = 0; index < SIDE_HAND_SIZE && !sideCardExists; ++index) {
+		if (computerSideCards[index] != nullptr) {
+			sideCardExists = true;
+		}
+	}
+	return(sideCardExists);
+}
+
+
+/********************************************************************************************************
+* Function: computerDecision()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Primary controller for logic behind the computer player's decisions. Computer will stand,
+* end turn, or use a side card based on various conditions related to the computer's score, the player's
+* score, 
+* Input parameters: 1) RenderWindow& window, a reference to the game window. 2) int& player, a reference
+* to an integer representing which player has the current turn (should be the computer until it ends turn).
+* 3) bool& computerStands, a reference to a boolean representing whether the computer player has stood.
+* 4) bool& playerStands, a reference to a boolean representing whether the user controlled player has stood.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::computerDecision(RenderWindow& window, int& player, bool& computerStands, bool& playerStands) {
+	bool sideCardPlayed = false, alerted = false;
+	while (window.isOpen() && player == 2) {
+
+		if (playerStands && mPlayerScore > 20) {
+			computerStands = true;
+			player = 1;
+		}
+		if (mComputerScore >= 18 && mComputerScore < 20) {
+			computerStands = true;
+			player = 1;
+		}
+		if (mComputerScore < 20 && mComputerCardsDealt == 9) {
+			computerStands = true;
+			playerStands = true;
+		}
+		else if (mComputerScore > 20) {
+			if (!alerted) {
+				// play warnbust.wav
+				alerted = true;
+			}
+			if (!computerHasSideCards()) {
+				computerStands = true;
+				player = 1;
+			}
+		}
+
+		Event event;
+		if (window.pollEvent(event) && !computerStands) {
+			if (event.type == Event::Closed) {
+				window.close();
+			}
+			if (event.type == Event::KeyReleased) {
+				switch (event.key.code) {
+				case Keyboard::Escape:
+					window.close();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		if (mComputerScore < 14) {
+			player = 1;
+		}
+		else {
+			if (computerHasSideCards() && !sideCardPlayed) {
+				computerChooseToPlaySideCards(sideCardPlayed);
+				player = 1;
+				if (mComputerScore >= 18) {
+					computerStands = true;
+				}
+			}
+		}
 
 		this->displayMatch(window);
 	}
 }
 
 
-void Match::playSideCard(Card*& sideCard, int& player) {
-	if (sideCard != nullptr) {
-		if (player == 1) {
-			sideCard->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt));
-			playerMainCards[mPlayerCardsDealt++] = sideCard;
-			sideCard = nullptr;
+/********************************************************************************************************
+* Function: computerChooseToPlaySideCards()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Determines whether the computer will use a Side Card. If the computer can reach 20 points by
+* using a Side Card it will do so.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::computerChooseToPlaySideCards(bool& sideCardPlayed) {
+	int goal = 20 - mComputerScore;
+	int sideValues[SIDE_HAND_SIZE] = { 0 };
+	for (int index = 0; index < SIDE_HAND_SIZE; ++index) {
+		if (computerSideCards[index] != nullptr) {
+			sideValues[index] = computerSideCards[index]->getValue();
 		}
-		else {
-			sideCard->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt));
-			computerMainCards[mComputerCardsDealt++] = sideCard;
-			sideCard = nullptr;
+	}
+	for (int index = 0; index < SIDE_HAND_SIZE && !sideCardPlayed; ++index) {
+		if (goal == sideValues[index] && goal != 0) {
+			playSideCard(computerSideCards[index], 2);
+			sideCardPlayed = true;
+		}
+		else if (index > 1 && goal != 0 && goal == (sideValues[index] * (-1))) {
+			dynamic_cast <SwitchCard*> (computerSideCards[index])->modifyCard();
+			playSideCard(computerSideCards[index], 2);
+			sideCardPlayed = true;
 		}
 	}
 }
 
 
-void Match::playerWinsASet() {
-	gameBoard->setPlayerIndicator(++mPlayerSetWins);
+/********************************************************************************************************
+* Function: resetSet()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Clears the game board of cards and returns it into a condition to begin a set. Resets
+* integer counters for cards dealt and score for both the player and computer to 0.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::resetSet() {
+	for (int index = 0; index < MAIN_HAND_SIZE; ++index) {
+		if (playerMainCards[index] != nullptr) {
+			delete playerMainCards[index];
+			playerMainCards[index] = nullptr;
+		}
+		if (computerMainCards[index] != nullptr) {
+			delete computerMainCards[index];
+			computerMainCards[index] = nullptr;
+		}
+	}
+	mPlayerCardsDealt = 0;
+	mComputerCardsDealt = 0;
+	mPlayerScore = 0;
+	mComputerScore = 0;
 }
 
 
-void Match::computerWinsASet() {
-	gameBoard->setBotIndicator(++mComputerSetWins);
+/********************************************************************************************************
+* Function: determineWinner()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Determines which player has won a set based on various win conditions.
+* Input parameters: void
+* Returns: int winner, will be 1 if the user player has won the set, 2 if the computer has won the set.
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+int Match::determineWinner() {
+	int winner = -1;
+	if (mPlayerScore == mComputerScore && mPlayerScore <= 20) {
+		winner = 0;
+	}
+	else if (mPlayerScore > mComputerScore && mPlayerScore <= 20 ||
+		(mComputerScore > 20 && mPlayerScore <= 20)) {
+		winner = 1;
+	}
+	else if (mComputerScore > mPlayerScore && mComputerScore <= 20 ||
+		(mPlayerScore > 20 && mComputerScore <= 20)) {
+		winner = 2;
+	}
+
+	if (mPlayerCardsDealt == 9 && mPlayerScore <= 20) {
+		winner = 1;
+	}
+	else if (mComputerCardsDealt == 9 && mComputerScore <= 20) {
+		winner = 2;
+	}
+	return(winner);
 }
 
 
-void Match::updatePlayerScore() {
+/********************************************************************************************************
+* Function: incrementWins()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Increments the set win count of either player and sets the visual indicator correctly based
+* on the value of the input parameter.
+* Input parameters: int& winner, a reference to an integer representing which player has won the set. If
+* the value is 1, the player has won. If the value is 2, the computer has won the set.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::incrementWins(int& winner) {
+	if (winner == 1) {
+		gameBoard->setPlayerIndicator(++mPlayerSetWins);
+	}
+	else if (winner == 2) {
+		gameBoard->setBotIndicator(++mComputerSetWins);
+	}
+}
 
+
+/********************************************************************************************************
+* Function: matchWinnerExists()
+* Date Created: 4/19/2024
+* Date Last Modified: 4/19/2024
+* Programmer: Colin Van Dyke
+* Description: Checks the set win count of both players to see if one of them has won the match. Returns
+* true if one has, false if neither has.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+bool Match::matchWinnerExists() {
+	bool winnerExists = false;
+	if (mPlayerSetWins == 3) {
+		winnerExists = true;
+	}
+	else if (mComputerSetWins == 3) {
+		winnerExists = true;
+	}
+	return(winnerExists);
 }
