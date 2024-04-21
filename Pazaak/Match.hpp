@@ -10,6 +10,7 @@
 using sf::RenderWindow;
 using sf::Event;
 using sf::Keyboard;
+using sf::Clock;
 
 class Match
 {
@@ -35,6 +36,7 @@ private:
 	int mComputerSetWins;
 	int mPlayerScore;
 	int mComputerScore;
+	Clock gameClock;
 
 	// PRIVATE METHODS
 	void initializeSideDecks();
@@ -53,5 +55,7 @@ private:
 	int determineWinner();
 	void incrementWins(int& winner);
 	bool matchWinnerExists();
+	void displaySetWinMessage(int& setWinner, RenderWindow& window);
+	void displayMatchWinMessage(int& setWinner, RenderWindow& window);
 };
 
