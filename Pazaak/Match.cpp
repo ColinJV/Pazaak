@@ -706,6 +706,18 @@ bool Match::matchWinnerExists() {
 }
 
 
+/********************************************************************************************************
+* Function: displaySetWInMessage()
+* Date Created: 4/20/2024
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke
+* Description: Creates RectangleShape and Text to display a system message indicating the outcome of a set.
+* Input parameters: 1) int& setWinner, a reference to an integer indicating which player has won the set.
+* 2) RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
 void Match::displaySetWinMessage(int& setWinner, RenderWindow& window) {
 	bool acknowledged = false;
 	RectangleShape systemMessage({500.f, 250.f});
@@ -762,6 +774,18 @@ void Match::displaySetWinMessage(int& setWinner, RenderWindow& window) {
 }
 
 
+/********************************************************************************************************
+* Function: displayMatchWinMessage()
+* Date Created: 4/20/2024
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke
+* Description: Creates RectangleShape and Text to display a system message indicating the outcome of a match.
+* Input parameters: 1) int& setWinner, a reference to an integer indicating which player has won the match.
+* 2) RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
 void Match::displayMatchWinMessage(int& setWinner, RenderWindow& window) {
 	bool acknowledged = false;
 	RectangleShape systemMessage({ 500.f, 250.f });
