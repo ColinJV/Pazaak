@@ -5,7 +5,7 @@
 * Date Created: 4/17/2024
 * Date Last Modified: 4/17/2024
 * Programmer: Colin Van Dyke
-* Description: Constructs a Match object. Instantiates four arrays of pointers to pointers to Cards on
+* Description: Constructs a Match object. Instantiates four arrays of pointers to Cards on
 * the heap, setting the pointers to Cards to nullptr initially. Instantiates a Board object.
 * Input parameters: void
 * Returns: void
@@ -113,7 +113,7 @@ void Match::initializeSideDecks() {
 ********************************************************************************************************/
 int Match::playMatch(RenderWindow& window) {
 	bool matchWinner = false, playerStands = false, computerStands = false;
-	int winnerID = -1, player = 1, setWinner = 0;
+	int winnerID = -1, player = 1, setWinner = -1;
 	this->initializeSideDecks();
 
 	while (window.isOpen() && !matchWinner) {
@@ -123,41 +123,52 @@ int Match::playMatch(RenderWindow& window) {
 			dealMainCard(playerMainCards[mPlayerCardsDealt], player);
 			// play drawmain.wav sound
 			playerDecision(window, player, playerStands, computerStands);
+			if (mPlayerScore > 20) {
+				computerStands = true;
+			}
 		}
-		if (player == 1 && playerStands) {
-			player = 2;
-		}
+		player = 2;
 		if (window.isOpen() && player == 2 && !computerStands) {
+			gameClock.restart();
 			gameBoard->setTurnIndicator(player);
 			// play startturn.wav sound
 			dealMainCard(computerMainCards[mComputerCardsDealt], player);
 			// play drawmain.wav sound
+			while (gameClock.getElapsedTime() < sf::milliseconds(1000)) {
+				this->displayMatch(window);
+			}
 			computerDecision(window, player, computerStands, playerStands);
+			if (mComputerScore > 20) {
+				playerStands = true;
+			}
 		}
-		if (player == 2 && computerStands) {
-			player = 1;
-		}
+		player = 1;
 		if (playerStands && computerStands) {
 			setWinner = determineWinner();
 			incrementWins(setWinner);
 			if (!matchWinnerExists()) {
-				// if setWinner == 1
-				//		play winset.wav
-				//		popup system message saying you win the set
-				// if setWinner == 2
-				//		play loseset.wav
-				//		popup system message saying you lose the set
+				switch (setWinner) {
+				case 1:
+					// play winset.wav
+					break;
+				case 2:
+					// play loseset.wav
+					break;
+				default:
+					break;
+				}
+				displaySetWinMessage(setWinner, window);
+
 				playerStands = false;
 				computerStands = false;
-				player = 1;
-				setWinner = 0;
+				setWinner = -1;
 				resetSet();
 			}
 			else {
 				matchWinner = true;
 				// if setWinner == 1 play winmatch.wav
 				// if setWinner == 2 play losematch.wav
-				// popup system message saying you win or you lose
+				displayMatchWinMessage(setWinner, window);
 				winnerID = setWinner;
 			}
 		}
@@ -165,14 +176,6 @@ int Match::playMatch(RenderWindow& window) {
 		this->displayMatch(window);
 	}
 
-	if (matchWinner) {
-		if (mPlayerSetWins == 3) {
-			winnerID = 1;
-		}
-		else {
-			winnerID = 2;
-		}
-	}
 	return(winnerID);
 }
 
@@ -278,15 +281,17 @@ void Match::dealMainCard(Card*& newCardSlot, int& player) {
 ********************************************************************************************************/
 void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands, bool& computerStands) {
 	bool sideCardPlayed = false, alerted = false;
+
 	while (window.isOpen() && player == 1) {
 
-		if (mPlayerScore >= 19) {
+		if (mPlayerScore == 20) {
 			playerStands = true;
 			player = 2;
 		}
-		if (mPlayerScore < 20 && mPlayerCardsDealt == 9) {
+		else if (mPlayerScore < 20 && mPlayerCardsDealt == 9) {
 			playerStands = true;
 			computerStands = true;
+			player = 2;
 		}
 		else if (mPlayerScore > 20 && !alerted) {
 			// play bustwarning.wav
@@ -487,19 +492,23 @@ bool Match::computerHasSideCards() {
 ********************************************************************************************************/
 void Match::computerDecision(RenderWindow& window, int& player, bool& computerStands, bool& playerStands) {
 	bool sideCardPlayed = false, alerted = false;
+	gameClock.restart();
 	while (window.isOpen() && player == 2) {
 
-		if (playerStands && mPlayerScore > 20) {
+		if (mComputerScore > mPlayerScore && mComputerScore <= 20 && playerStands) {
 			computerStands = true;
-			player = 1;
 		}
-		if (mComputerScore >= 18 && mComputerScore < 20) {
-			computerStands = true;
-			player = 1;
-		}
-		if (mComputerScore < 20 && mComputerCardsDealt == 9) {
+		else if (mComputerScore < 20 && mComputerCardsDealt == 9) {
 			computerStands = true;
 			playerStands = true;
+		}
+		if (!computerStands && playerStands && mPlayerScore > 20) {
+			computerStands = true;
+			player = 1;
+		}
+		if (!computerStands && mComputerScore >= 18 && mComputerScore < 20) {
+			computerStands = true;
+			player = 1;
 		}
 		else if (mComputerScore > 20) {
 			if (!alerted) {
@@ -512,6 +521,7 @@ void Match::computerDecision(RenderWindow& window, int& player, bool& computerSt
 			}
 		}
 
+		// this is here in case the player closes the window during the computer's turn
 		Event event;
 		if (window.pollEvent(event) && !computerStands) {
 			if (event.type == Event::Closed) {
@@ -541,6 +551,10 @@ void Match::computerDecision(RenderWindow& window, int& player, bool& computerSt
 			}
 		}
 
+		this->displayMatch(window);
+	}
+
+	while (window.isOpen() && gameClock.getElapsedTime() < sf::milliseconds(1200)) {
 		this->displayMatch(window);
 	}
 }
@@ -689,4 +703,137 @@ bool Match::matchWinnerExists() {
 		winnerExists = true;
 	}
 	return(winnerExists);
+}
+
+
+/********************************************************************************************************
+* Function: displaySetWInMessage()
+* Date Created: 4/20/2024
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke
+* Description: Creates RectangleShape and Text to display a system message indicating the outcome of a set.
+* Input parameters: 1) int& setWinner, a reference to an integer indicating which player has won the set.
+* 2) RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::displaySetWinMessage(int& setWinner, RenderWindow& window) {
+	bool acknowledged = false;
+	RectangleShape systemMessage({500.f, 250.f});
+	systemMessage.setPosition(540.f, 300.f);
+	systemMessage.setFillColor(Color(0, 0, 170, 150));
+	systemMessage.setOutlineColor(Color(0, 166, 248, 255));
+	Text systemMessageText;
+	Font fontType;
+	if (!fontType.loadFromFile("Old_R.ttf")) {
+		cout << "Error loading font." << endl;
+	}
+	systemMessageText.setFont(fontType);
+	systemMessageText.setFillColor(Color(0, 166, 248, 255));
+	systemMessageText.setOutlineColor(Color(0, 166, 248, 255));
+	systemMessageText.setPosition(560.f, 390.f);
+	systemMessageText.setCharacterSize(20);
+	if (setWinner == 0) {
+		systemMessageText.setString("The set is tied.\nPress Enter to continue.");
+	}
+	else if (setWinner == 1) {
+		systemMessageText.setString("You win the set.\nPress Enter to continue.");
+	}
+	else if (setWinner == 2) {
+		systemMessageText.setString("You lose the set.\nPress Enter to continue.");
+	}
+
+	while (window.isOpen() && !acknowledged) {
+
+		Event event;
+		if (window.pollEvent(event)) {
+			if (event.type == Event::Closed) {
+				window.close();
+			}
+			if (event.type == Event::KeyReleased) {
+				switch (event.key.code) {
+				case Keyboard::Enter:
+					acknowledged = true;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+
+		window.clear();
+		gameBoard->display(window);
+		this->drawAllCardsOnBoard(window);
+		window.draw(systemMessage);
+		window.draw(systemMessageText);
+		window.display();
+	}
+	
+}
+
+
+/********************************************************************************************************
+* Function: displayMatchWinMessage()
+* Date Created: 4/20/2024
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke
+* Description: Creates RectangleShape and Text to display a system message indicating the outcome of a match.
+* Input parameters: 1) int& setWinner, a reference to an integer indicating which player has won the match.
+* 2) RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::displayMatchWinMessage(int& setWinner, RenderWindow& window) {
+	bool acknowledged = false;
+	RectangleShape systemMessage({ 500.f, 250.f });
+	systemMessage.setPosition(540.f, 300.f);
+	systemMessage.setFillColor(Color(0, 0, 170, 150));
+	systemMessage.setOutlineColor(Color(0, 166, 248, 255));
+	Text systemMessageText;
+	Font fontType;
+	if (!fontType.loadFromFile("Old_R.ttf")) {
+		cout << "Error loading font." << endl;
+	}
+	systemMessageText.setFont(fontType);
+	systemMessageText.setFillColor(Color(0, 166, 248, 255));
+	systemMessageText.setOutlineColor(Color(0, 166, 248, 255));
+	systemMessageText.setPosition(560.f, 390.f);
+	systemMessageText.setCharacterSize(20);
+	if (setWinner == 1) {
+		systemMessageText.setString("You win the match!\nPress Enter to continue.");
+	}
+	else if (setWinner == 2) {
+		systemMessageText.setString("You lose the match!\nPress Enter to continue.");
+	}
+
+	while (window.isOpen() && !acknowledged) {
+
+		Event event;
+		if (window.pollEvent(event)) {
+			if (event.type == Event::Closed) {
+				window.close();
+			}
+			if (event.type == Event::KeyReleased) {
+				switch (event.key.code) {
+				case Keyboard::Enter:
+					acknowledged = true;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+
+		window.clear();
+		gameBoard->display(window);
+		this->drawAllCardsOnBoard(window);
+		window.draw(systemMessage);
+		window.draw(systemMessageText);
+		window.display();
+	}
+
 }
