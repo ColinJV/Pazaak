@@ -1,15 +1,15 @@
 #include "Game.hpp"
 
 /********************************************************************************************************
-* Function: Game constructor																			*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Constructs a Game object.																*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: Game constructor
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Constructs a Game object.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 Game::Game() {
 	mGameWindow.create(VideoMode(1600, 900), "Pazaak Rules", sf::Style::Default);
@@ -20,15 +20,15 @@ Game::Game() {
 
 
 /********************************************************************************************************
-* Function: Game destructor																				*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Destroys a Game object.																	*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: Game destructor
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Destroys a Game object.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 Game::~Game() {
 	
@@ -36,17 +36,17 @@ Game::~Game() {
 
 
 /********************************************************************************************************
-* Function: runGame()																					*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Creates a MainMenu object and calls runMainMenu(). If runMainMenu() returns true, creates*
-* a Match object and calls playMatch(). When playMatch returns, increments either playerWinCount or		*
-* computerWinCount depending on return value. Loops until gameWindow closes then returns.				*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: runGame()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Creates a MainMenu object and calls runMainMenu(). If runMainMenu() returns true, creates
+* a Match object and calls playMatch(). When playMatch returns, increments either playerWinCount or
+* computerWinCount depending on return value. Loops until gameWindow closes then returns.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Game::runGame() {
 	MainMenu mainMenu;
@@ -73,15 +73,15 @@ void Game::runGame() {
 
 
 /********************************************************************************************************
-* Function: playerVictory()																				*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Increments the mPlayerWinCount data member.												*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: playerVictory()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Increments the mPlayerWinCount data member.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Game::playerVictory() {
 	++mPlayerWinCount;
@@ -89,15 +89,15 @@ void Game::playerVictory() {
 
 
 /********************************************************************************************************
-* Function: computerVictory()																			*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Increments the mComputerWinCount data member.											*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: computerVictory()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Increments the mComputerWinCount data member.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void Game::computerVictory() {
 	++mComputerWinCount;

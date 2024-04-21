@@ -2,7 +2,7 @@
 * Programmer: Colin Van Dyke (Lab Section 3)
 * Programmer: Joshua Allard (Lab Section 3)
 * Programmer: Nick McBrayer (Lab Section 3)
-* Programmer: Caitlyn Boyd
+* Programmer: Caitlyn Boyd (Lab Section 6)
 * Project Name: PA9, Pazaak Rules
 * Class: Washington State University CS122 Spring 2024, Prof. Andy O'Fallon
 * Description: This program implements a game of Pazaak, a card game originating

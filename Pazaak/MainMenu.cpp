@@ -1,15 +1,15 @@
 #include "MainMenu.hpp"
 
 /********************************************************************************************************
-* Function: MainMenu constructor																		*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Constructs a MainMenu object.															*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: MainMenu constructor
+* Date Created: 4/14/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Constructs a MainMenu object.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 MainMenu::MainMenu() {
 	if (!fontType.loadFromFile("Old_R.ttf")) {
@@ -49,15 +49,15 @@ MainMenu::MainMenu() {
 
 
 /********************************************************************************************************
-* Function: MainMenu destructor																			*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Destroys a MainMenu object.																*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: MainMenu destructor
+* Date Created: 4/14/2024
+* Date Last Modified: 4/14/2024
+* Programmer: Colin Van Dyke
+* Description: Destroys a MainMenu object.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 MainMenu::~MainMenu() {
 	delete[] mainMenuText;
@@ -65,16 +65,16 @@ MainMenu::~MainMenu() {
 
 
 /********************************************************************************************************
-* Function: drawMainMenu()																				*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Draws the MainMenu text on the input RenderWindow										*
-* Input parameters: RenderWindow& window, a reference to a RenderWindow that is the game's graphics		*
-* window.																								*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: drawMainMenu()
+* Date Created: 4/14/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Draws the MainMenu text on the input RenderWindow
+* Input parameters: RenderWindow& window, a reference to a RenderWindow that is the game's graphics
+* window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::drawMainMenu(RenderWindow& window) {
 	window.draw(backgroundImage);
@@ -86,16 +86,16 @@ void MainMenu::drawMainMenu(RenderWindow& window) {
 
 
 /********************************************************************************************************
-* Function: moveUp()																					*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Modifies which option on the main menu is highlighted and decrements the userSelection	*
-* member variable of MainMenu. Checks if userSelection is out of bounds and corrects it if it is.		*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: moveUp()
+* Date Created: 4/14/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Modifies which option on the main menu is highlighted and decrements the userSelection
+* member variable of MainMenu. Checks if userSelection is out of bounds and corrects it if it is.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::moveUp() {
 	if (userSelection >= 0) {
@@ -109,16 +109,16 @@ void MainMenu::moveUp() {
 
 
 /********************************************************************************************************
-* Function: moveUp()																					*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Modifies which option on the main menu is highlighted and increments the userSelection	*
-* member variable of MainMenu. Checks if userSelection is out of bounds and corrects it if it is.		*
-* Input parameters: int cardValue																		*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: moveDown()
+* Date Created: 4/14/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Modifies which option on the main menu is highlighted and increments the userSelection
+* member variable of MainMenu. Checks if userSelection is out of bounds and corrects it if it is.
+* Input parameters: int cardValue
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::moveDown() {
 	if (userSelection <= NUMBER_OF_OPTIONS) {
@@ -132,18 +132,17 @@ void MainMenu::moveDown() {
 
 
 /********************************************************************************************************
-* Function: drawRules()																					*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Creates 3 sf::Text objects; a rules header, rules text, and controls header. Applies 	*
-* settings for the text then draws it and displays it to the window, reading user inputs until either	*
-* the user elects to return to the Main Menu or the window closes.										*
-* Input parameters: RenderWindow& window, a reference to the RenderWindow object that is the game		*
-* window.																								*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: drawRules()
+* Date Created: 4/14/2024
+* Date Last Modified: 4/14/2024
+* Programmer: Colin Van Dyke
+* Description: Creates 3 sf::Text objects; a rules header, rules text, and controls header. Applies
+* settings for the text then draws it and displays it to the window, reading user inputs until either
+* the user elects to return to the Main Menu or the window closes.
+* Input parameters: RenderWindow& window, a reference to the RenderWindow object that is the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::drawRules(RenderWindow& window) const
 {
@@ -225,18 +224,17 @@ void MainMenu::drawRules(RenderWindow& window) const
 
 
 /********************************************************************************************************
-* Function: drawRules()																					*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/14/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Creates two sf::Text objects, one for a header and one for the rule text. Sets settings	*
-* for the text then draws it and displays it to the window, reading user inputs until either the user	*
-* elects to return to the Main Menu or the window closes.												*
-* Input parameters: RenderWindow& window, a reference to the RenderWindow object that is the game		*
-* window.																								*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: getUserSelection()
+* Date Created: 4/14/2024
+* Date Last Modified: 4/14/2024
+* Programmer: Colin Van Dyke
+* Description: Creates two sf::Text objects, one for a header and one for the rule text. Sets settings
+* for the text then draws it and displays it to the window, reading user inputs until either the user
+* elects to return to the Main Menu or the window closes.
+* Input parameters: RenderWindow& window, a reference to the RenderWindow object that is the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 int MainMenu::getUserSelection() {
 	return(userSelection);
@@ -244,20 +242,19 @@ int MainMenu::getUserSelection() {
 
 
 /********************************************************************************************************
-* Function: runMainMenu()																				*
-* Date Created: 4/14/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke, Nick McBrayer																*
-* Description: Main logic function for MainMenu object. Draws and displays the MainMenu to the window	*
-* and conducts event polling. Highlights various menu options based on userSelection value. Loops until *
-* the window closes or until the player chooses to play the game, at which point a boolean flag is set	*
-* and returned to the calling function.																	*
-* Input parameters: RenderWindow& window, a reference to the RenderWindow object that is the game		*
-* window.																								*
-* Returns: bool playGame, a boolean flag that controls loop repetition and, when returned to the calling*
-* function, will initiate the primary gameplay logic.													*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: runMainMenu()
+* Date Created: 4/14/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
+* Description: Main logic function for MainMenu object. Draws and displays the MainMenu to the window
+* and conducts event polling. Highlights various menu options based on userSelection value. Loops until
+* the window closes or until the player chooses to play the game, at which point a boolean flag is set
+* and returned to the calling function.
+* Input parameters: RenderWindow& window, a reference to the RenderWindow object that is the game window.
+* Returns: bool playGame, a boolean flag that controls loop repetition and, when returned to the calling
+* function, will initiate the primary gameplay logic.
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 bool MainMenu::runMainMenu(RenderWindow& window) {
 	bool playGame = false;
@@ -393,17 +390,16 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 
 
 /********************************************************************************************************
-* Function: userHoversPlayGame()																		*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text	*
-* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 0 to		*
-* Yellow.																								*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: userHoversPlayGame()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text
+* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 0 to Yellow.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::userHoversPlayGame() {
 	mainMenuText[userSelection].setFillColor(Color(0, 166, 248, 255));
@@ -413,17 +409,16 @@ void MainMenu::userHoversPlayGame() {
 
 
 /********************************************************************************************************
-* Function: userHoversRules()																			*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text	*
-* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 1 to		*
-* Yellow.																								*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: userHoversRules()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text
+* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 1 to Yellow.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::userHoversRules() {	
 	mainMenuText[userSelection].setFillColor(Color(0, 166, 248, 255));
@@ -433,17 +428,16 @@ void MainMenu::userHoversRules() {
 
 
 /********************************************************************************************************
-* Function: userHoversQuit()																			*
-* Date Created: 4/17/2024																				*
-* Date Last Modified: 4/17/2024																			*
-* Programmer: Colin Van Dyke																			*
-* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text	*
-* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 2 to		*
-* Yellow.																								*
-* Input parameters: void																				*
-* Returns: void																							*
-* Preconditions: None																					*
-* Postconditions: None																					*
+* Function: userHoversQuit()
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Colin Van Dyke
+* Description: Changes the color of the currently selected MainMenu Text object to the normal menu text
+* color, then sets userSelection to 0 and updates color of the MainMenu Text object at index 2 to Yellow.
+* Input parameters: void
+* Returns: void
+* Preconditions: None
+* Postconditions: None
 ********************************************************************************************************/
 void MainMenu::userHoversQuit() {
 	mainMenuText[userSelection].setFillColor(Color(0, 166, 248, 255));
