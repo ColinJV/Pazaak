@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "SwitchCard.hpp"
+#include <SFML/Audio.hpp>
 #include "MainCard.hpp"
 #include "GameBoard.hpp"
 
@@ -11,6 +12,11 @@ using sf::RenderWindow;
 using sf::Event;
 using sf::Keyboard;
 using sf::Clock;
+using sf::Sound;
+using sf::SoundBuffer;
+using sf::Music;
+
+
 
 class Match
 {
@@ -37,6 +43,9 @@ private:
 	int mPlayerScore;
 	int mComputerScore;
 	Clock gameClock;
+	Music bMusic1, bMusic2;
+	Sound startSound, drawSound, winSound, loseSound, bustSound, winMSound, LoseMSound;
+	SoundBuffer startBuff, drawBuff, winBuff, loseBuff, bustBuff, winMbuff, LoseMBuff;
 
 	// PRIVATE METHODS
 	void initializeSideDecks();

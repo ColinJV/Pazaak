@@ -3,8 +3,8 @@
 /********************************************************************************************************
 * Function: MainMenu constructor
 * Date Created: 4/14/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Constructs a MainMenu object.
 * Input parameters: void
 * Returns: void
@@ -43,6 +43,19 @@ MainMenu::MainMenu() {
 	mainMenuText[2].setString("3. Quit");
 	mainMenuText[2].setCharacterSize(20);
 	mainMenuText[2].setPosition(850, 560);
+
+	// Sounds
+	if (!background.openFromFile("audio/mus_theme_cult.wav")) {
+		cout << "Main Theme Error!" << endl;
+	}
+	if (!moveBuf.loadFromFile("audio/kotor_menu_sfx2.wav")) {
+		cout << "Menu move Sound Error!" << endl;
+	}
+	if (!selBuff.loadFromFile("audio/kotor_menu_sfx.wav")) {
+		cout << "Menu select Error!" << endl;
+	}
+	menuMove.setBuffer(moveBuf);
+	menuSelect.setBuffer(selBuff);
 
 	userSelection = 0;
 }
@@ -244,7 +257,7 @@ int MainMenu::getUserSelection() {
 /********************************************************************************************************
 * Function: runMainMenu()
 * Date Created: 4/14/2024
-* Date Last Modified: 4/17/2024
+* Date Last Modified: 4/20/2024
 * Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Main logic function for MainMenu object. Draws and displays the MainMenu to the window
 * and conducts event polling. Highlights various menu options based on userSelection value. Loops until
@@ -258,25 +271,13 @@ int MainMenu::getUserSelection() {
 ********************************************************************************************************/
 bool MainMenu::runMainMenu(RenderWindow& window) {
 	bool playGame = false;
-	sf::Music music;
-	if (!music.openFromFile("audio/mus_theme_cult.wav")) {
-		cout << "Main Theme Error!" << endl;
-	}
-	music.setVolume(20);
-	music.setLoop(true);
-	music.play();
-	sf::SoundBuffer buffer1, buffer2;
-	if (!buffer1.loadFromFile("audio/kotor_menu_sfx2.wav")) {
-		cout << "Sound1 Error!" << endl;
-	}
-	if (!buffer2.loadFromFile("audio/kotor_menu_sfx.wav")) {
-		cout << "Sound2 Error!" << endl;
-	}
-	sf::Sound sound1, sound2;
-	sound1.setBuffer(buffer1);
-	sound1.setVolume(20);
-	sound2.setBuffer(buffer2);
-	sound2.setVolume(20);
+
+	background.setVolume(20);
+	background.setLoop(true);
+	background.play();
+	menuMove.setVolume(30);
+	menuSelect.setVolume(30);
+
 	while (window.isOpen() && playGame == false) {
 		Event event;
 
@@ -288,22 +289,22 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 				switch (event.key.code) {
 				case Keyboard::Up:
 					this->moveUp();
-					sound1.play();
+					menuMove.play();
 					break;
 				case Keyboard::W:
 					this->moveUp();
-					sound1.play();
+					menuMove.play();
 					break;
 				case Keyboard::S:
 					this->moveDown();
-					sound1.play();
+					menuMove.play();
 					break;
 				case Keyboard::Down: 
 					this->moveDown();
-					sound1.play();
+					menuMove.play();
 					break;
 				case Keyboard::Enter:
-					sound2.play();
+					menuSelect.play();
 					switch (this->getUserSelection()) {
 					case 0:
 						playGame = true;
@@ -319,15 +320,16 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 					}
 					break;
 				case Keyboard::Num1:
-					sound2.play();
+					menuSelect.play();
+					
 					playGame = true;
 					break;
 				case Keyboard::Num2:
-					sound2.play();
+					menuSelect.play();
 					this->drawRules(window);
 					break;
 				case Keyboard::Num3:
-					sound2.play();
+					menuSelect.play();
 					window.close();
 					break;
 				case Keyboard::Escape:
@@ -344,19 +346,19 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 				if (mainMenuText[0].getGlobalBounds().contains(mousePosition)) {
 					if (userSelection != 0) {
 						userHoversPlayGame();
-						sound1.play();
+						menuMove.play();
 					}
 				}
 				else if (mainMenuText[1].getGlobalBounds().contains(mousePosition)) {
 					if (userSelection != 1) {
 						userHoversRules();
-						sound1.play();
+						menuMove.play();
 					}
 				}
 				else if (mainMenuText[2].getGlobalBounds().contains(mousePosition)) {
 					if (userSelection != 2) {
 						userHoversQuit();
-						sound1.play();
+						menuMove.play();
 					}
 				}
 			}
@@ -366,14 +368,14 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 				mousePosition.y = sf::Mouse::getPosition(window).y;
 				if (mainMenuText[0].getGlobalBounds().contains(mousePosition) && userSelection == 0) {
 					playGame = true;
-					sound2.play();
+					menuSelect.play();
 				}
 				else if (mainMenuText[1].getGlobalBounds().contains(mousePosition) && userSelection == 1) {
-					sound2.play();
+					menuSelect.play();
 					this->drawRules(window);
 				}
 				else if (mainMenuText[2].getGlobalBounds().contains(mousePosition) && userSelection == 2) {
-					sound2.play();
+					menuSelect.play();
 					window.close();
 				}
 			}
@@ -384,7 +386,7 @@ bool MainMenu::runMainMenu(RenderWindow& window) {
 			window.display();
 		}
 	}
-	music.stop();
+	background.stop();
 	return(playGame);
 }
 

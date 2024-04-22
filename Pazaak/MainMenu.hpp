@@ -16,6 +16,9 @@ using sf::Keyboard;
 using sf::RectangleShape;
 using sf::Vector2f;
 using sf::Texture;
+using sf::Music;
+using sf::Sound;
+using sf::SoundBuffer;
 using std::cout;
 using std::endl;
 
@@ -48,6 +51,9 @@ public:
 
 private:
 	int userSelection;
+	Music background;
+	Sound menuMove, menuSelect;
+	SoundBuffer moveBuf, selBuff;
 	Font fontType;
 	Text* mainMenuText;
 	RectangleShape backgroundImage;
