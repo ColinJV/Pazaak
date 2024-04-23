@@ -66,5 +66,6 @@ private:
 	bool matchWinnerExists();
 	void displaySetWinMessage(int& setWinner, RenderWindow& window);
 	void displayMatchWinMessage(int& setWinner, RenderWindow& window);
+	void clearEventQueue(RenderWindow& window);
 };
 
