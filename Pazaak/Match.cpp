@@ -82,8 +82,8 @@ Match::Match() {
 	winMSound.setVolume(30);
 	LoseMSound.setVolume(30);
 	playSide.setVolume(30);
-	bMusic1.setVolume(50);
-	bMusic2.setVolume(50);
+	bMusic1.setVolume(20);
+	bMusic2.setVolume(20);
 
 }
 
@@ -164,8 +164,8 @@ void Match::initializeSideDecks() {
 * Postconditions: None
 ********************************************************************************************************/
 int Match::playMatch(RenderWindow& window) {
-	int musSel = (rand() % 2) + 1;
-	if (musSel == 1) {
+	int musSel = rand() % 2;
+	if (musSel == 0) {
 		bMusic1.play();
 		bMusic1.setLoop(true);
 	}
@@ -179,6 +179,7 @@ int Match::playMatch(RenderWindow& window) {
 
 	while (window.isOpen() && !matchWinner) {
 		if (window.isOpen() && player == 1 && !playerStands) {
+			clearEventQueue(window);
 			gameBoard->setTurnIndicator(player);
 			startSound.play();
 			dealMainCard(playerMainCards[mPlayerCardsDealt], player);
@@ -187,10 +188,9 @@ int Match::playMatch(RenderWindow& window) {
 			if (mPlayerScore > 20) {
 				computerStands = true;
 			}
-
-
-			gameBoard->setPlayerScore(mPlayerScore); // CB 4/22/2024
-			this->displayMatch(window); // CB 4/22/2024 called to keep score current to turn
+			// CJV 4/23/2024 commenting out this call because calls now occur in dealMainCard() and playSideCard()
+			//gameBoard->setPlayerScore(mPlayerScore); // CB 4/22/2024
+			//this->displayMatch(window); // CB 4/22/2024 called to keep score current to turn
 		}
 		player = 2;
 		if (window.isOpen() && player == 2 && !computerStands) {
@@ -206,8 +206,9 @@ int Match::playMatch(RenderWindow& window) {
 			if (mComputerScore > 20) {
 				playerStands = true;
 			}
-			gameBoard->setBotScore(mComputerScore); // CB 4/22/2024
-			this->displayMatch(window); //CB 4/22/2024 called to keep score current to turn
+			// CJV 4/23/2024 commenting out this call because calls now occur in dealMainCard() and playSideCard()
+			//gameBoard->setBotScore(mComputerScore); // CB 4/22/2024
+			//this->displayMatch(window); //CB 4/22/2024 called to keep score current to turn
 		}
 		player = 1;
 		if (playerStands && computerStands) {
@@ -302,10 +303,7 @@ void Match::drawAllCardsOnBoard(RenderWindow& window) {
 
 	for (int index = 0; index < SIDE_HAND_SIZE; ++index) {
 		if (computerSideCards[index] != nullptr) {
-			// need something here that draws the back of a card
-			// could use art or just a different colored rectangle
-			// the player is not supposed to know what the computer has
-			// in its side deck.
+			computerSideCards[index]->drawCardBackInWindow(window);
 		}
 	}
 }
@@ -328,12 +326,12 @@ void Match::dealMainCard(Card*& newCardSlot, int& player) {
 	if (player == 1) {
 		newCardSlot->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt++));
 		mPlayerScore += cardValue;
-		// something here that updates the Text in the score window
+		gameBoard->setPlayerScore(mPlayerScore); // CJV 4/23/24 added function call here for more responsive score updates
 	}
 	else {
 		newCardSlot->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt++));
 		mComputerScore += cardValue;
-		// something here that updates the Text in the score window
+		gameBoard->setBotScore(mComputerScore); // CJV 4/23/24 added function call here for more responsive score updates
 	}
 }
 
@@ -460,6 +458,7 @@ void Match::playSideCard(Card*& sideCard, const int& player) {
 			playerMainCards[mPlayerCardsDealt++] = sideCard;
 			mPlayerScore += sideCard->getValue();
 			sideCard = nullptr;
+			gameBoard->setPlayerScore(mPlayerScore);
 		}
 		else {
 			playSide.play();
@@ -467,6 +466,7 @@ void Match::playSideCard(Card*& sideCard, const int& player) {
 			computerMainCards[mComputerCardsDealt++] = sideCard;
 			mComputerScore += sideCard->getValue();
 			sideCard = nullptr;
+			gameBoard->setBotScore(mComputerScore);
 		}
 	}
 }
@@ -912,4 +912,32 @@ void Match::displayMatchWinMessage(int& setWinner, RenderWindow& window) {
 		window.display();
 	}
 
+}
+
+
+/********************************************************************************************************
+* Function: clearEventQueue()
+* Date Created: 4/20/2024
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke
+* Description: Clears the Event queue for the game window. Implemented to fix a bug where if a player hit a
+* key during a time when their inputs were not being read, such as during the computer's turn, the action
+* corresponding to that input would be immediately executed upon the start of their turn (e.g. if the player
+* pressed Enter during the computer's turn, the player would receive a Main Card and immediately end their
+* next turn, potentially affecting the outcome of the game.
+* Input parameters: RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::clearEventQueue(RenderWindow& window) {
+	Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == Event::KeyReleased) {
+			switch (event.key.code) {
+			default:
+				break;
+			}
+		}
+	}
 }

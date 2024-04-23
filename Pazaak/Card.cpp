@@ -22,6 +22,10 @@ Card::Card(const int& cardValue) {
 	mCard.setFillColor(Color::Black);
 	mCard.setOutlineColor(Color(96, 96, 96));
 	mCard.setOutlineThickness(3.f);
+	mCardBack = RectangleShape(Vector2f(100.f, 125.f));
+	mCardBack.setFillColor(Color::Black);
+	mCardBack.setOutlineColor(Color(96, 96, 96));
+	mCardBack.setOutlineThickness(3.f);
 	mText.setFont(fontType);
 	mText.setString(std::to_string(mValue));
 	mText.setOutlineColor(Color::Black);
@@ -129,11 +133,13 @@ void Card::setPosition(const Vector2f& newPosition) {
 	if (mText.getString() != "1")
 	{
 		mCard.setPosition(newPosition);
+		mCardBack.setPosition(newPosition);
 		mText.setPosition({ newPosition.x + 42, newPosition.y + 42 }); // CB 4/20/2024 Centers numbers on the cards
 	}
 	else
 	{
 		mCard.setPosition(newPosition);
+		mCardBack.setPosition(newPosition);
 		mText.setPosition({ newPosition.x + 46, newPosition.y + 42 }); // CB 4/22/2024 Fixes issue where 1's were off center.
 	}
 }
@@ -168,4 +174,9 @@ const RectangleShape& Card::getShape(void) const {
 ********************************************************************************************************/
 const Text& Card::getText(void) const {
 	return(mText);
+}
+
+
+void Card::drawCardBackInWindow(RenderWindow& window) {
+	window.draw(this->mCardBack);
 }

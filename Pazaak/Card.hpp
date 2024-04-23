@@ -33,10 +33,12 @@ public:
 
 	// DISPLAY
 	virtual void drawCardInWindow(RenderWindow& window) = 0;
+	void drawCardBackInWindow(RenderWindow& window);
 
 protected:
 	int mValue;
 	RectangleShape mCard;
+	RectangleShape mCardBack;
 	Text mText;
 	Font fontType;
 	sf::Texture cardTexture; // CB 4/21/2024
