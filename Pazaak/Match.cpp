@@ -103,8 +103,8 @@ void Match::initializeSideDecks() {
 /********************************************************************************************************
 * Function: playMatch()
 * Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/22/2024
+* Programmer: Colin Van Dyke, Caitlyn Boyd
 * Description: Contains main flow of game logic.
 * Input parameters: void
 * Returns: void
@@ -117,6 +117,7 @@ int Match::playMatch(RenderWindow& window) {
 	this->initializeSideDecks();
 
 	while (window.isOpen() && !matchWinner) {
+
 		if (window.isOpen() && player == 1 && !playerStands) {
 			gameBoard->setTurnIndicator(player);
 			// play startturn.wav sound
@@ -126,6 +127,10 @@ int Match::playMatch(RenderWindow& window) {
 			if (mPlayerScore > 20) {
 				computerStands = true;
 			}
+
+
+			gameBoard->setPlayerScore(mPlayerScore); // CB 4/22/2024
+			this->displayMatch(window); // CB 4/22/2024 called to keep score current to turn
 		}
 		player = 2;
 		if (window.isOpen() && player == 2 && !computerStands) {
@@ -141,6 +146,8 @@ int Match::playMatch(RenderWindow& window) {
 			if (mComputerScore > 20) {
 				playerStands = true;
 			}
+			gameBoard->setBotScore(mComputerScore); // CB 4/22/2024
+			this->displayMatch(window); //CB 4/22/2024 called to keep score current to turn
 		}
 		player = 1;
 		if (playerStands && computerStands) {
@@ -163,6 +170,9 @@ int Match::playMatch(RenderWindow& window) {
 				computerStands = false;
 				setWinner = -1;
 				resetSet();
+
+				gameBoard->setPlayerScore(0); // CB 4/22/2024 Resets scorecard to 0
+				gameBoard->setBotScore(0); // CB 4/22/2024 Resets scorecard to 0
 			}
 			else {
 				matchWinner = true;

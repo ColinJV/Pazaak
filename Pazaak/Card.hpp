@@ -39,5 +39,6 @@ protected:
 	RectangleShape mCard;
 	Text mText;
 	Font fontType;
+	sf::Texture cardTexture; // CB 4/21/2024
 };
 
