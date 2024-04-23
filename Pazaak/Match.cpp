@@ -56,6 +56,9 @@ Match::Match() {
 	if (!LoseMBuff.loadFromFile("audio/mgs_losematch.wav")) {
 		cout << "Lose Match Sound Error!" << endl;
 	}
+	if (!playSBuff.loadFromFile("audio/mgs_playside.wav")) {
+		cout << "Play Sidecard Sound Error!" << endl;
+	}
 	if (!bMusic1.openFromFile("audio/mus_area_cant1.wav")) {
 		cout << "Cant1 Music Error!" << endl;
 	}
@@ -69,6 +72,7 @@ Match::Match() {
 	bustSound.setBuffer(bustBuff);
 	winMSound.setBuffer(winMbuff);
 	LoseMSound.setBuffer(LoseMBuff);
+	playSide.setBuffer(playSBuff);
 
 	startSound.setVolume(30);
 	drawSound.setVolume(30);
@@ -77,6 +81,7 @@ Match::Match() {
 	bustSound.setVolume(30);
 	winMSound.setVolume(30);
 	LoseMSound.setVolume(30);
+	playSide.setVolume(30);
 	bMusic1.setVolume(50);
 	bMusic2.setVolume(50);
 
@@ -428,8 +433,8 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 /********************************************************************************************************
 * Function: playSideCard()
 * Date Created: 4/18/2024
-* Date Last Modified: 4/18/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/22/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Plays a SideCard at the address of the input reference to a Card*, updates the score of
 * the player who played the card, and sets the original pointer to nullptr.
 * Input parameters: 1) Card*& sideCard, a reference to a pointer to a Card that is going to be played to
@@ -442,12 +447,14 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 void Match::playSideCard(Card*& sideCard, const int& player) {
 	if (sideCard != nullptr) {
 		if (player == 1) {
+			playSide.play();
 			sideCard->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt));
 			playerMainCards[mPlayerCardsDealt++] = sideCard;
 			mPlayerScore += sideCard->getValue();
 			sideCard = nullptr;
 		}
 		else {
+			playSide.play();
 			sideCard->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt));
 			computerMainCards[mComputerCardsDealt++] = sideCard;
 			mComputerScore += sideCard->getValue();

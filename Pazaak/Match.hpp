@@ -44,8 +44,8 @@ private:
 	int mComputerScore;
 	Clock gameClock;
 	Music bMusic1, bMusic2;
-	Sound startSound, drawSound, winSound, loseSound, bustSound, winMSound, LoseMSound;
-	SoundBuffer startBuff, drawBuff, winBuff, loseBuff, bustBuff, winMbuff, LoseMBuff;
+	Sound startSound, drawSound, winSound, loseSound, bustSound, winMSound, LoseMSound, playSide;
+	SoundBuffer startBuff, drawBuff, winBuff, loseBuff, bustBuff, winMbuff, LoseMBuff, playSBuff;
 
 	// PRIVATE METHODS
 	void initializeSideDecks();

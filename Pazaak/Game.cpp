@@ -38,8 +38,8 @@ Game::~Game() {
 /********************************************************************************************************
 * Function: runGame()
 * Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/22/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Creates a MainMenu object and calls runMainMenu(). If runMainMenu() returns true, creates
 * a Match object and calls playMatch(). When playMatch returns, increments either playerWinCount or
 * computerWinCount depending on return value. Loops until gameWindow closes then returns.
@@ -51,7 +51,9 @@ Game::~Game() {
 void Game::runGame() {
 	MainMenu mainMenu;
 	int winner = -1;
-
+	int playerwins = 0, compwins = 0;
+	Niklos.setBuffer(NiklosBuff);
+	Niklos.setVolume(30);
 	while (mGameWindow.isOpen()) {
 		bool playGame = false;
 		playGame = mainMenu.runMainMenu(mGameWindow);
@@ -59,14 +61,30 @@ void Game::runGame() {
 			Match newMatch;
 			winner = newMatch.playMatch(mGameWindow);
 			if (winner == PLAYER_WINS) {
+				playerwins++;
+				if (playerwins == 1) {
+					NiklosBuff.loadFromFile("audio/Niklos_lose1.wav");
+					Niklos.play();
+				}
+				else if (playerwins == 2) {
+					NiklosBuff.loadFromFile("audio/Niklos_lose2.wav");
+					Niklos.play();
+				}
+				else if (playerwins == 3) {
+					NiklosBuff.loadFromFile("audio/Niklos_lose3.wav");
+					Niklos.play();
+				}
 				this->playerVictory();
 			}
 			else {
+				compwins++;
+				if (compwins == 1) {
+					NiklosBuff.loadFromFile("audio/Niklos_win.wav");
+					Niklos.play();
+				}
 				this->computerVictory();
 			}
-			// can play different dialogue files here depending on winner, or depending on differential
-			// between player wins and computer wins. Niklos has some dialogue that accuses you of
-			// cheating if you beat him too many times, could be funny to include.
+
 		}
 	}
 }
