@@ -28,5 +28,7 @@ private:
 	RenderWindow mGameWindow;
 	unsigned int mPlayerWinCount;
 	unsigned int mComputerWinCount;
+	sf::Sound Niklos;
+	sf::SoundBuffer NiklosBuff;
 };
 

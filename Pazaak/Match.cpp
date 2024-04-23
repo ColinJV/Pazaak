@@ -3,8 +3,8 @@
 /********************************************************************************************************
 * Function: Match constructor
 * Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/21/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Constructs a Match object. Instantiates four arrays of pointers to Cards on
 * the heap, setting the pointers to Cards to nullptr initially. Instantiates a Board object.
 * Input parameters: void
@@ -33,6 +33,58 @@ Match::Match() {
 		playerSideCards[index] = nullptr;
 		computerSideCards[index] = nullptr;
 	}
+
+	// Sounds
+	if (!startBuff.loadFromFile("audio/mgs_startturn.wav")) {
+		cout << "Start Turn Sound Error!" << endl;
+	}
+	if (!drawBuff.loadFromFile("audio/mgs_drawmain.wav")) {
+		cout << "Draw Main Sound Error!" << endl;
+	}
+	if (!winBuff.loadFromFile("audio/mgs_winset.wav")) {
+		cout << "Win Set Sound Error!" << endl;
+	}
+	if (!loseBuff.loadFromFile("audio/mgs_loseset.wav")) {
+		cout << "Lose Set Sound Error!" << endl;
+	}
+	if (!bustBuff.loadFromFile("audio/mgs_warnbust.wav")) {
+		cout << "Bust Sound Error!" << endl;
+	}
+	if (!winMbuff.loadFromFile("audio/mgs_winmatch.wav")) {
+		cout << "Win Match Sound Error!" << endl;
+	}
+	if (!LoseMBuff.loadFromFile("audio/mgs_losematch.wav")) {
+		cout << "Lose Match Sound Error!" << endl;
+	}
+	if (!playSBuff.loadFromFile("audio/mgs_playside.wav")) {
+		cout << "Play Sidecard Sound Error!" << endl;
+	}
+	if (!bMusic1.openFromFile("audio/mus_area_cant1.wav")) {
+		cout << "Cant1 Music Error!" << endl;
+	}
+	if (!bMusic2.openFromFile("audio/mus_area_cant2.wav")) {
+		cout << "Cant2 Music Error!" << endl;
+	}
+	startSound.setBuffer(startBuff);
+	drawSound.setBuffer(drawBuff);
+	winSound.setBuffer(winBuff);
+	loseSound.setBuffer(loseBuff);
+	bustSound.setBuffer(bustBuff);
+	winMSound.setBuffer(winMbuff);
+	LoseMSound.setBuffer(LoseMBuff);
+	playSide.setBuffer(playSBuff);
+
+	startSound.setVolume(30);
+	drawSound.setVolume(30);
+	winSound.setVolume(30);
+	loseSound.setVolume(30);
+	bustSound.setVolume(30);
+	winMSound.setVolume(30);
+	LoseMSound.setVolume(30);
+	playSide.setVolume(30);
+	bMusic1.setVolume(20);
+	bMusic2.setVolume(20);
+
 }
 
 
@@ -103,8 +155,8 @@ void Match::initializeSideDecks() {
 /********************************************************************************************************
 * Function: playMatch()
 * Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/22/2024
+* Programmer: Colin Van Dyke, Caitlyn Boyd, Nick McBrayer
 * Description: Contains main flow of game logic.
 * Input parameters: void
 * Returns: void
@@ -112,28 +164,41 @@ void Match::initializeSideDecks() {
 * Postconditions: None
 ********************************************************************************************************/
 int Match::playMatch(RenderWindow& window) {
+	int musSel = rand() % 2;
+	if (musSel == 0) {
+		bMusic1.play();
+		bMusic1.setLoop(true);
+	}
+	else {
+		bMusic2.play();
+		bMusic2.setLoop(true);
+	}
 	bool matchWinner = false, playerStands = false, computerStands = false;
 	int winnerID = -1, player = 1, setWinner = -1;
 	this->initializeSideDecks();
 
 	while (window.isOpen() && !matchWinner) {
 		if (window.isOpen() && player == 1 && !playerStands) {
+			clearEventQueue(window);
 			gameBoard->setTurnIndicator(player);
-			// play startturn.wav sound
+			startSound.play();
 			dealMainCard(playerMainCards[mPlayerCardsDealt], player);
-			// play drawmain.wav sound
+			drawSound.play();
 			playerDecision(window, player, playerStands, computerStands);
 			if (mPlayerScore > 20) {
 				computerStands = true;
 			}
+			// CJV 4/23/2024 commenting out this call because calls now occur in dealMainCard() and playSideCard()
+			//gameBoard->setPlayerScore(mPlayerScore); // CB 4/22/2024
+			//this->displayMatch(window); // CB 4/22/2024 called to keep score current to turn
 		}
 		player = 2;
 		if (window.isOpen() && player == 2 && !computerStands) {
 			gameClock.restart();
 			gameBoard->setTurnIndicator(player);
-			// play startturn.wav sound
+			startSound.play();
 			dealMainCard(computerMainCards[mComputerCardsDealt], player);
-			// play drawmain.wav sound
+			drawSound.play();
 			while (gameClock.getElapsedTime() < sf::milliseconds(1000)) {
 				this->displayMatch(window);
 			}
@@ -141,6 +206,9 @@ int Match::playMatch(RenderWindow& window) {
 			if (mComputerScore > 20) {
 				playerStands = true;
 			}
+			// CJV 4/23/2024 commenting out this call because calls now occur in dealMainCard() and playSideCard()
+			//gameBoard->setBotScore(mComputerScore); // CB 4/22/2024
+			//this->displayMatch(window); //CB 4/22/2024 called to keep score current to turn
 		}
 		player = 1;
 		if (playerStands && computerStands) {
@@ -149,10 +217,10 @@ int Match::playMatch(RenderWindow& window) {
 			if (!matchWinnerExists()) {
 				switch (setWinner) {
 				case 1:
-					// play winset.wav
+					winSound.play();
 					break;
 				case 2:
-					// play loseset.wav
+					loseSound.play();
 					break;
 				default:
 					break;
@@ -163,11 +231,18 @@ int Match::playMatch(RenderWindow& window) {
 				computerStands = false;
 				setWinner = -1;
 				resetSet();
+
+				gameBoard->setPlayerScore(0); // CB 4/22/2024 Resets scorecard to 0
+				gameBoard->setBotScore(0); // CB 4/22/2024 Resets scorecard to 0
 			}
 			else {
 				matchWinner = true;
-				// if setWinner == 1 play winmatch.wav
-				// if setWinner == 2 play losematch.wav
+				if (setWinner == 1) {
+					winMSound.play();
+				}
+				if (setWinner == 2) {
+					LoseMSound.play();
+				}
 				displayMatchWinMessage(setWinner, window);
 				winnerID = setWinner;
 			}
@@ -228,10 +303,7 @@ void Match::drawAllCardsOnBoard(RenderWindow& window) {
 
 	for (int index = 0; index < SIDE_HAND_SIZE; ++index) {
 		if (computerSideCards[index] != nullptr) {
-			// need something here that draws the back of a card
-			// could use art or just a different colored rectangle
-			// the player is not supposed to know what the computer has
-			// in its side deck.
+			computerSideCards[index]->drawCardBackInWindow(window);
 		}
 	}
 }
@@ -254,12 +326,12 @@ void Match::dealMainCard(Card*& newCardSlot, int& player) {
 	if (player == 1) {
 		newCardSlot->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt++));
 		mPlayerScore += cardValue;
-		// something here that updates the Text in the score window
+		gameBoard->setPlayerScore(mPlayerScore); // CJV 4/23/24 added function call here for more responsive score updates
 	}
 	else {
 		newCardSlot->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt++));
 		mComputerScore += cardValue;
-		// something here that updates the Text in the score window
+		gameBoard->setBotScore(mComputerScore); // CJV 4/23/24 added function call here for more responsive score updates
 	}
 }
 
@@ -267,8 +339,8 @@ void Match::dealMainCard(Card*& newCardSlot, int& player) {
 /********************************************************************************************************
 * Function: playerDecision()
 * Date Created: 4/18/2024
-* Date Last Modified: 4/18/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/21/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Contains Event polling functionality for the player's turn. Can call a variety of
 * functions based on player input, sets flags to avoid repeat actions. Loops until the game window
 * closes, the player ends their turn, or the player stands.
@@ -294,7 +366,7 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 			player = 2;
 		}
 		else if (mPlayerScore > 20 && !alerted) {
-			// play bustwarning.wav
+			bustSound.play();
 			alerted = true;
 			if (!playerHasSideCards()) {
 				playerStands = true;
@@ -367,8 +439,8 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 /********************************************************************************************************
 * Function: playSideCard()
 * Date Created: 4/18/2024
-* Date Last Modified: 4/18/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/22/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Plays a SideCard at the address of the input reference to a Card*, updates the score of
 * the player who played the card, and sets the original pointer to nullptr.
 * Input parameters: 1) Card*& sideCard, a reference to a pointer to a Card that is going to be played to
@@ -381,16 +453,20 @@ void Match::playerDecision(RenderWindow& window, int& player, bool& playerStands
 void Match::playSideCard(Card*& sideCard, const int& player) {
 	if (sideCard != nullptr) {
 		if (player == 1) {
+			playSide.play();
 			sideCard->setPosition(gameBoard->getPlayerCardPosition(mPlayerCardsDealt));
 			playerMainCards[mPlayerCardsDealt++] = sideCard;
 			mPlayerScore += sideCard->getValue();
 			sideCard = nullptr;
+			gameBoard->setPlayerScore(mPlayerScore);
 		}
 		else {
+			playSide.play();
 			sideCard->setPosition(gameBoard->getBotCardPosition(mComputerCardsDealt));
 			computerMainCards[mComputerCardsDealt++] = sideCard;
 			mComputerScore += sideCard->getValue();
 			sideCard = nullptr;
+			gameBoard->setBotScore(mComputerScore);
 		}
 	}
 }
@@ -477,8 +553,8 @@ bool Match::computerHasSideCards() {
 /********************************************************************************************************
 * Function: computerDecision()
 * Date Created: 4/19/2024
-* Date Last Modified: 4/19/2024
-* Programmer: Colin Van Dyke
+* Date Last Modified: 4/21/2024
+* Programmer: Colin Van Dyke, Nick McBrayer
 * Description: Primary controller for logic behind the computer player's decisions. Computer will stand,
 * end turn, or use a side card based on various conditions related to the computer's score, the player's
 * score, 
@@ -512,7 +588,7 @@ void Match::computerDecision(RenderWindow& window, int& player, bool& computerSt
 		}
 		else if (mComputerScore > 20) {
 			if (!alerted) {
-				// play warnbust.wav
+				bustSound.play();
 				alerted = true;
 			}
 			if (!computerHasSideCards()) {
@@ -836,4 +912,32 @@ void Match::displayMatchWinMessage(int& setWinner, RenderWindow& window) {
 		window.display();
 	}
 
+}
+
+
+/********************************************************************************************************
+* Function: clearEventQueue()
+* Date Created: 4/20/2024
+* Date Last Modified: 4/20/2024
+* Programmer: Colin Van Dyke
+* Description: Clears the Event queue for the game window. Implemented to fix a bug where if a player hit a
+* key during a time when their inputs were not being read, such as during the computer's turn, the action
+* corresponding to that input would be immediately executed upon the start of their turn (e.g. if the player
+* pressed Enter during the computer's turn, the player would receive a Main Card and immediately end their
+* next turn, potentially affecting the outcome of the game.
+* Input parameters: RenderWindow& window, a reference to the game window.
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void Match::clearEventQueue(RenderWindow& window) {
+	Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == Event::KeyReleased) {
+			switch (event.key.code) {
+			default:
+				break;
+			}
+		}
+	}
 }
