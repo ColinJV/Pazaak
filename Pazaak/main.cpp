@@ -14,7 +14,10 @@
 *       3) SideCard inherits from Card
 *       4) SwitchCard inherits from SideCard
 *       5) Each derived class of Card overrides drawCardInWindow()
-* 
+* Preliminary unimplemented networking features exist in Network.hpp/.cpp and in
+* DataHandler.hpp/.cpp. These classes are incomplete and commented out, and the project will
+* not build if they are not commented out. This implementation uses a simple AI for the opponent
+* rather than a networked player.
 */
 
 #include "Game.hpp"
