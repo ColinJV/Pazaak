@@ -51,7 +51,6 @@ Game::~Game() {
 void Game::runGame() {
 	MainMenu mainMenu;
 	int winner = -1;
-	int playerwins = 0, compwins = 0;
 	Niklos.setBuffer(NiklosBuff);
 	Niklos.setVolume(30);
 	while (mGameWindow.isOpen()) {
@@ -61,30 +60,25 @@ void Game::runGame() {
 			Match newMatch;
 			winner = newMatch.playMatch(mGameWindow);
 			if (winner == PLAYER_WINS) {
-				playerwins++;
-				if (playerwins == 1) {
+				playerVictory();
+				if (mPlayerWinCount == 1) {
 					NiklosBuff.loadFromFile("audio/Niklos_lose1.wav");
 					Niklos.play();
 				}
-				else if (playerwins == 2) {
+				else if (mPlayerWinCount == 2) {
 					NiklosBuff.loadFromFile("audio/Niklos_lose2.wav");
 					Niklos.play();
 				}
-				else if (playerwins == 3) {
+				else if (mPlayerWinCount >= 3) {
 					NiklosBuff.loadFromFile("audio/Niklos_lose3.wav");
 					Niklos.play();
 				}
-				this->playerVictory();
 			}
 			else {
-				compwins++;
-				if (compwins == 1) {
-					NiklosBuff.loadFromFile("audio/Niklos_win.wav");
-					Niklos.play();
-				}
-				this->computerVictory();
+				computerVictory();
+				NiklosBuff.loadFromFile("audio/Niklos_win.wav");
+				Niklos.play();
 			}
-
 		}
 	}
 }

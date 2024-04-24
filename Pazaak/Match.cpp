@@ -82,8 +82,8 @@ Match::Match() {
 	winMSound.setVolume(30);
 	LoseMSound.setVolume(30);
 	playSide.setVolume(30);
-	bMusic1.setVolume(20);
-	bMusic2.setVolume(20);
+	bMusic1.setVolume(15);
+	bMusic2.setVolume(15);
 
 }
 
@@ -625,6 +625,9 @@ void Match::computerDecision(RenderWindow& window, int& player, bool& computerSt
 					computerStands = true;
 				}
 			}
+			else {
+				player = 1;
+			}
 		}
 
 		this->displayMatch(window);
@@ -798,7 +801,7 @@ void Match::displaySetWinMessage(int& setWinner, RenderWindow& window) {
 	bool acknowledged = false;
 	RectangleShape systemMessage({500.f, 250.f});
 	systemMessage.setPosition(540.f, 300.f);
-	systemMessage.setFillColor(Color(0, 0, 170, 150));
+	systemMessage.setFillColor(Color(0, 0, 170, 255));
 	systemMessage.setOutlineColor(Color(0, 166, 248, 255));
 	Text systemMessageText;
 	Font fontType;
@@ -807,7 +810,8 @@ void Match::displaySetWinMessage(int& setWinner, RenderWindow& window) {
 	}
 	systemMessageText.setFont(fontType);
 	systemMessageText.setFillColor(Color(0, 166, 248, 255));
-	systemMessageText.setOutlineColor(Color(0, 166, 248, 255));
+	systemMessageText.setOutlineColor(Color::Black);
+	systemMessageText.setOutlineThickness(2.f);
 	systemMessageText.setPosition(560.f, 390.f);
 	systemMessageText.setCharacterSize(20);
 	if (setWinner == 0) {
@@ -866,7 +870,7 @@ void Match::displayMatchWinMessage(int& setWinner, RenderWindow& window) {
 	bool acknowledged = false;
 	RectangleShape systemMessage({ 500.f, 250.f });
 	systemMessage.setPosition(540.f, 300.f);
-	systemMessage.setFillColor(Color(0, 0, 170, 150));
+	systemMessage.setFillColor(Color(0, 0, 170, 255));
 	systemMessage.setOutlineColor(Color(0, 166, 248, 255));
 	Text systemMessageText;
 	Font fontType;
@@ -875,7 +879,8 @@ void Match::displayMatchWinMessage(int& setWinner, RenderWindow& window) {
 	}
 	systemMessageText.setFont(fontType);
 	systemMessageText.setFillColor(Color(0, 166, 248, 255));
-	systemMessageText.setOutlineColor(Color(0, 166, 248, 255));
+	systemMessageText.setOutlineColor(Color::Black);
+	systemMessageText.setOutlineThickness(2.f);
 	systemMessageText.setPosition(560.f, 390.f);
 	systemMessageText.setCharacterSize(20);
 	if (setWinner == 1) {

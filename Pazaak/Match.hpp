@@ -16,8 +16,6 @@ using sf::Sound;
 using sf::SoundBuffer;
 using sf::Music;
 
-
-
 class Match
 {
 public:
