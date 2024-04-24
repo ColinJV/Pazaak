@@ -30,8 +30,6 @@ GameBoard::GameBoard()
 		cout << "Failure to load font." << endl;
 	}
 
-
-
 	playerText.setFont(fontType);
 	playerText.setCharacterSize(40);
 	playerText.setStyle(Text::Bold | Text::Italic);
@@ -68,66 +66,6 @@ GameBoard::GameBoard()
 
 }
 
-/********************************************************************************************************
-* Function: initCards
-* Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
-* Description: Initializes all the card shapes for the gameboard and populates the appropriate vectors.
-* Input parameters:NONE
-* Returns: void
-* Preconditions: None
-* Postconditions: None
-********************************************************************************************************/
-
-void GameBoard::initCards()
-{
-	cardSkin.loadFromFile("cardSkin2.png");
-	Color darkGrey(64, 64, 64);
-	RectangleShape newCard({ 100, 125 });
-	newCard.setFillColor(darkGrey);
-	newCard.setOutlineColor(Color::Black);
-	newCard.setOutlineThickness(3.f);
-	newCard.setTexture(&cardSkin);
-
-	int factora = 1, factorb = 1, factorc = 1, factorD = 1;
-	for (int i = 0; i < 9; i++)
-	{
-		playerHand.push_back(newCard);
-		botHand.push_back(newCard);
-		if (i < 3)
-		{
-			playerHand[i].setPosition({ 175.f + factora, 125.f });
-			factora += 125;
-			botHand[i].setPosition({ 175.f + factora + 750, 125.f });
-		}
-		else if (i < 6)
-		{
-			playerHand[i].setPosition({ 175.f + factorb, 275.f });
-			factorb += 125;
-			botHand[i].setPosition({ 175.f + factorb + 750, 275.f });
-		}
-		else
-		{
-			playerHand[i].setPosition({ 175.f + factorc, 425.f });
-			factorc += 125;
-			botHand[i].setPosition({ 175.f + factorc + 750, 425.f });
-		}
-
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		playerSide.push_back(newCard);
-		botSide.push_back(newCard);
-		playerSide[i].setPosition({ 125.f + factorD, 650 });
-		botSide[i].setPosition({ 125.f + factorD + 850, 650 });
-		factorD += 125;
-	}
-
-
-
-}
 
 /********************************************************************************************************
 * Function: getPlayerHand
@@ -188,47 +126,6 @@ void GameBoard::display(RenderWindow& window)
 	window.draw(scoreCardLabels);
 	window.draw(playerScore);
 	window.draw(botScore);
-}
-
-/********************************************************************************************************
-* Function: initIndicators
-* Date Created: 4/17/2024
-* Date Last Modified: 4/17/2024
-* Programmer: Caitlyn Boyd
-* Description: Initializes all three indicators including required shapes and colors.
-* Input parameters: None
-* Returns: void
-* Preconditions: None
-* Postconditions: None
-********************************************************************************************************/
-void GameBoard::initIndicators()
-{
-	scoreIndicator_texture.loadFromFile("deathStarButton.png");
-	// Score indicators
-	Color mediumGrey(64, 64, 64);
-	CircleShape circle(15.f);
-	circle.setTexture(&scoreIndicator_texture);
-	circle.setFillColor(mediumGrey);
-	circle.setOutlineColor(Color::Black);
-	circle.setOutlineThickness(3.f);
-	int adjustment = 0;
-
-	for (int i = 0; i < 3; i++)
-	{
-		playerIndicator.push_back(circle);
-		botIndicator.push_back(circle);
-		playerIndicator[i].setPosition(125, 150 + adjustment); // ignore weird math, it just helped keep positions consistent
-		botIndicator[i].setPosition(125 + 1300, 150 + adjustment);
-
-		adjustment += 30;
-	}
-
-	// turn indicator
-
-	circle.setPosition({ 450 + 225 + 10, 150 }); // ignore weird math, it just helped keep positions consistent
-	turnIndicator.push_back(circle);
-	circle.setPosition({ 550 + 285 + 10, 150 });
-	turnIndicator.push_back(circle);
 }
 
 /********************************************************************************************************
@@ -388,52 +285,7 @@ Vector2f GameBoard::getPlayerCardPosition(int card)
 	return result;
 }
 
-/********************************************************************************************************
-* Function: initScoreCard
-* Date Created: 4/20/2024
-* Date Last Modified: 4/22/2024
-* Programmer: Caitlyn Boyd
-* Description: initializes the score display on the gamebaord.
-* Input parameters: NONE
-* Returns: void
-* Preconditions: None
-* Postconditions: None
-********************************************************************************************************/
-void GameBoard::initScoreCard()
-{
-	//scoreCard_texture.loadFromFile("scoreCard.png");
-	scoreCard.setTexture(&background_texture);
-	scoreCard.setSize({ 300, 200 });
-	scoreCard.setPosition({ 800 - 75 - 25 - 50 - 25 + 15, 450 - 25 - 50 - 50 });
-	scoreCard.setFillColor(Color(0, 128, 255));
-	scoreCard.setOutlineColor(Color(0, 0, 51));
-	scoreCard.setOutlineThickness(3);
 
-	scoreCardLabels.setString("Player\t  Opponent");
-	scoreCardLabels.setCharacterSize(15);
-	scoreCardLabels.setFillColor(Color::White);
-	scoreCardLabels.setFont(fontType);
-	scoreCardLabels.setPosition({ 655, 350 });
-
-	botScore.setFont(fontType);
-	botScore.setCharacterSize(40);
-	botScore.setPosition({ 850, 375 });
-	botScore.setFillColor(Color::White);
-	botScore.setString("0");
-	botScore.setOutlineColor(Color::Black);
-	botScore.setOutlineThickness(1);
-
-
-	playerScore.setFont(fontType);
-	playerScore.setCharacterSize(40);
-	playerScore.setPosition({ 685, 375 });
-	playerScore.setFillColor(Color::White);
-	playerScore.setString("0");
-	playerScore.setOutlineColor(Color::Black);
-	playerScore.setOutlineThickness(1);
-
-
-}
 
 /********************************************************************************************************
 * Function: setPlayerScore
@@ -473,4 +325,221 @@ void GameBoard::setBotScore(int score)
 	{
 		botScore.setPosition({ 835, 375 });
 	}
+}
+
+/********************************************************************************************************
+* Function: getPlayerScore
+* Date Created: 4/23/2024
+* Date Last Modified: 4/23/2024
+* Programmer: Caitlyn Boyd
+* Description: Accessor method for text object playerScore.
+* Input parameters: None
+* Returns: Text playerScore
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+Text GameBoard::getPlayerScore()
+{
+	
+	return playerScore;
+
+}
+
+/********************************************************************************************************
+* Function: getBotScore
+* Date Created: 4/23/2024
+* Date Last Modified: 4/23/2024
+* Programmer: Caitlyn Boyd
+* Description: Accessor method for text object botScore.
+* Input parameters: None
+* Returns: Text playerScore
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+Text GameBoard::getBotScore()
+{
+	return botScore;
+}
+
+/********************************************************************************************************
+* Function: getBackground
+* Date Created: 4/23/2024
+* Date Last Modified: 4/23/2024
+* Programmer: Caitlyn Boyd
+* Description: Accessor method for RectangleShape background.
+* Input parameters: None
+* Returns: RectangleShape background
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+RectangleShape GameBoard::getBackground()
+{
+	return background;
+}
+
+
+/********************************************************************************************************
+* Function:getScoreCardPosition
+* Date Created: 4/23/2024
+* Date Last Modified: 4/23/2024
+* Programmer: Caitlyn Boyd
+* Description: Accessor method for the position for the background of the scorecard.
+* Input parameters: None
+* Returns: RectangleShape background
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+Vector2f GameBoard::getScoreCardPosition()
+{
+	return scoreCard.getPosition();
+}
+
+
+/* PRIVATE FUNCTIONS */
+
+/********************************************************************************************************
+* Function: initCards
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Caitlyn Boyd
+* Description: Initializes all the card shapes for the gameboard and populates the appropriate vectors.
+* Input parameters:NONE
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+
+void GameBoard::initCards()
+{
+	cardSkin.loadFromFile("cardSkin2.png");
+	Color darkGrey(64, 64, 64);
+	RectangleShape newCard({ 100, 125 });
+	newCard.setFillColor(darkGrey);
+	newCard.setOutlineColor(Color::Black);
+	newCard.setOutlineThickness(3.f);
+	newCard.setTexture(&cardSkin);
+
+	int factora = 1, factorb = 1, factorc = 1, factorD = 1;
+	for (int i = 0; i < 9; i++)
+	{
+		playerHand.push_back(newCard);
+		botHand.push_back(newCard);
+		if (i < 3)
+		{
+			playerHand[i].setPosition({ 175.f + factora, 125.f });
+			factora += 125;
+			botHand[i].setPosition({ 175.f + factora + 750, 125.f });
+		}
+		else if (i < 6)
+		{
+			playerHand[i].setPosition({ 175.f + factorb, 275.f });
+			factorb += 125;
+			botHand[i].setPosition({ 175.f + factorb + 750, 275.f });
+		}
+		else
+		{
+			playerHand[i].setPosition({ 175.f + factorc, 425.f });
+			factorc += 125;
+			botHand[i].setPosition({ 175.f + factorc + 750, 425.f });
+		}
+
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		playerSide.push_back(newCard);
+		botSide.push_back(newCard);
+		playerSide[i].setPosition({ 125.f + factorD, 650 });
+		botSide[i].setPosition({ 125.f + factorD + 850, 650 });
+		factorD += 125;
+	}
+
+}
+
+/********************************************************************************************************
+* Function: initScoreCard
+* Date Created: 4/20/2024
+* Date Last Modified: 4/22/2024
+* Programmer: Caitlyn Boyd
+* Description: initializes the score display on the gamebaord.
+* Input parameters: NONE
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void GameBoard::initScoreCard()
+{
+	//scoreCard_texture.loadFromFile("scoreCard.png");
+	scoreCard.setTexture(&background_texture);
+	scoreCard.setSize({ 300, 200 });
+	scoreCard.setPosition({ 640, 325 });
+	scoreCard.setFillColor(Color(0, 128, 255));
+	scoreCard.setOutlineColor(Color(0, 0, 51));
+	scoreCard.setOutlineThickness(3);
+
+	scoreCardLabels.setString("Player\t  Opponent");
+	scoreCardLabels.setCharacterSize(15);
+	scoreCardLabels.setFillColor(Color::White);
+	scoreCardLabels.setFont(fontType);
+	scoreCardLabels.setPosition({ 655, 350 });
+
+	botScore.setFont(fontType);
+	botScore.setCharacterSize(40);
+	botScore.setPosition({ 850, 375 });
+	botScore.setFillColor(Color::White);
+	botScore.setString("0");
+	botScore.setOutlineColor(Color::Black);
+	botScore.setOutlineThickness(1);
+
+
+	playerScore.setFont(fontType);
+	playerScore.setCharacterSize(40);
+	playerScore.setPosition({ 685, 375 });
+	playerScore.setFillColor(Color::White);
+	playerScore.setString("0");
+	playerScore.setOutlineColor(Color::Black);
+	playerScore.setOutlineThickness(1);
+
+}
+
+
+/********************************************************************************************************
+* Function: initIndicators
+* Date Created: 4/17/2024
+* Date Last Modified: 4/17/2024
+* Programmer: Caitlyn Boyd
+* Description: Initializes all three indicators including required shapes and colors.
+* Input parameters: None
+* Returns: void
+* Preconditions: None
+* Postconditions: None
+********************************************************************************************************/
+void GameBoard::initIndicators()
+{
+	scoreIndicator_texture.loadFromFile("deathStarButton.png");
+	// Score indicators
+	Color mediumGrey(64, 64, 64);
+	CircleShape circle(15.f);
+	circle.setTexture(&scoreIndicator_texture);
+	circle.setFillColor(mediumGrey);
+	circle.setOutlineColor(Color::Black);
+	circle.setOutlineThickness(3.f);
+	int adjustment = 0;
+
+	for (int i = 0; i < 3; i++)
+	{
+		playerIndicator.push_back(circle);
+		botIndicator.push_back(circle);
+		playerIndicator[i].setPosition(125, 150 + adjustment); // ignore weird math, it just helped keep positions consistent
+		botIndicator[i].setPosition(125 + 1300, 150 + adjustment);
+
+		adjustment += 30;
+	}
+
+	// turn indicator
+
+	circle.setPosition({ 450 + 225 + 10, 150 }); // ignore weird math, it just helped keep positions consistent
+	turnIndicator.push_back(circle);
+	circle.setPosition({ 550 + 285 + 10, 150 });
+	turnIndicator.push_back(circle);
 }

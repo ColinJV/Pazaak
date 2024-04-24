@@ -21,9 +21,6 @@ public:
 	GameBoard();
 
 	vector<RectangleShape> getPlayerHand();
-	void initCards();
-	void initIndicators();
-	void initScoreCard();
 
 	void display(RenderWindow& window);
 
@@ -32,8 +29,13 @@ public:
 	void setTurnIndicator(int player);
 	void setPlayerScore(int score);
 	void setBotScore(int score);
+
 	Vector2f getBotCardPosition(int card);
 	Vector2f getPlayerCardPosition(int card);
+	Text getPlayerScore();
+	Text getBotScore();
+	RectangleShape getBackground();
+	Vector2f getScoreCardPosition();
 
 private:
 	vector<RectangleShape> playerHand;
@@ -56,4 +58,8 @@ private:
 	sf::Texture background_texture;
 	sf::Texture scoreIndicator_texture;
 	sf::Texture cardSkin;
+
+	void initCards();
+	void initIndicators();
+	void initScoreCard();
 };
