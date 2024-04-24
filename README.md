@@ -10,7 +10,7 @@ This is a Pazaak game with graphics and audio using implemented using the Simple
 2. Clone this repository. All required game assets are included in the repository.
 
 ## Demo
-A brief demonstration of critical sections of our source code and a demonstration of gameplay can be found [here](https://youtu.be/M-EfyXkRW4g).
+A brief demonstration of critical sections of our source code and a demonstration of gameplay can be found [here](https://youtu.be/M-EfyXkRW4g). (plaintext link: https://youtu.be/M-EfyXkRW4g).
 
 ## Legal
 Pazaak, all Knights of the Old Republic game assets, and all sound effects and music are the property of Lucasfilm Games and BioWare, a subsidiary of Electronic Arts. This project is a work of fan art produced for educational purposes. No copyright infringement is intended, and commercial use of these assets without the permission of the copyright owner is prohibited.
